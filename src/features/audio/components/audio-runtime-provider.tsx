@@ -10,6 +10,7 @@ import {
 
 import { usePlaybackShortcuts } from "@/features/audio/hooks/use-playback-shortcuts";
 import { useAudioRuntime } from "@/features/audio/hooks/use-audio-runtime";
+import { useOutputDeviceType } from "@/features/audio/hooks/use-output-device-type";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 import { useSessionUser } from "@/hooks/use-session-user";
 import type { Track } from "@/types/models";
@@ -28,6 +29,7 @@ const AudioRuntimeContext = createContext<AudioController | null>(null);
 
 export function AudioRuntimeProvider({ children }: PropsWithChildren) {
   const { user } = useSessionUser();
+  useOutputDeviceType();
 
   const recordRecentlyPlayed = useCallback(
     async (trackId: string) => {

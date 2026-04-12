@@ -44,7 +44,7 @@ Sonara is an MVP-ready music player web app with:
 
 - Playback uses Howler for robust audio loading/playback.
 - Audio graph is built via Web Audio API from Howler nodes:
-  - Source node -> 5 BiquadFilterNodes (EQ) -> AnalyserNode -> master output
+  - Source node -> 32 BiquadFilterNodes (EQ) -> AnalyserNode -> master output
 - Equalizer updates are real-time through Zustand store changes.
 - Visualizer reads frequency data from `AnalyserNode` via `requestAnimationFrame`.
 - Waveform uses WaveSurfer as visual waveform/seek surface.
@@ -289,9 +289,10 @@ Full SQL is in: `supabase/schema.sql`
 - Visualizer pauses frequency updates when audio is paused
 
 8. Equalizer flow
-- 5-band EQ: 60Hz, 230Hz, 910Hz, 3.6kHz, 14kHz
+- 32-band EQ: 20Hz, 25Hz, 31Hz, 40Hz, 50Hz, 63Hz, 80Hz, 100Hz, 125Hz, 160Hz, 200Hz, 250Hz, 315Hz, 400Hz, 500Hz, 630Hz, 800Hz, 1kHz, 1.25kHz, 1.6kHz, 2kHz, 2.5kHz, 3.15kHz, 4kHz, 5kHz, 6.3kHz, 8kHz, 10kHz, 12.5kHz, 16kHz, 18kHz, 20kHz
 - Gain range: -12dB to +12dB
 - Presets: Flat, Pop, Rock, Jazz, Classical, Bass Boost
+- Auto detect output device (speaker/headphone) and apply adaptive EQ profile
 - Reset button
 - Real-time effect on currently playing track
 

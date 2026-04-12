@@ -71,11 +71,38 @@ create table if not exists public.equalizer_presets (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
   name text not null,
-  band_60 numeric(5,2) not null default 0,
-  band_230 numeric(5,2) not null default 0,
-  band_910 numeric(5,2) not null default 0,
-  band_3600 numeric(5,2) not null default 0,
-  band_14000 numeric(5,2) not null default 0,
+  band_20 numeric(5,2) not null default 0,
+  band_25 numeric(5,2) not null default 0,
+  band_31 numeric(5,2) not null default 0,
+  band_40 numeric(5,2) not null default 0,
+  band_50 numeric(5,2) not null default 0,
+  band_63 numeric(5,2) not null default 0,
+  band_80 numeric(5,2) not null default 0,
+  band_100 numeric(5,2) not null default 0,
+  band_125 numeric(5,2) not null default 0,
+  band_160 numeric(5,2) not null default 0,
+  band_200 numeric(5,2) not null default 0,
+  band_250 numeric(5,2) not null default 0,
+  band_315 numeric(5,2) not null default 0,
+  band_400 numeric(5,2) not null default 0,
+  band_500 numeric(5,2) not null default 0,
+  band_630 numeric(5,2) not null default 0,
+  band_800 numeric(5,2) not null default 0,
+  band_1000 numeric(5,2) not null default 0,
+  band_1250 numeric(5,2) not null default 0,
+  band_1600 numeric(5,2) not null default 0,
+  band_2000 numeric(5,2) not null default 0,
+  band_2500 numeric(5,2) not null default 0,
+  band_3150 numeric(5,2) not null default 0,
+  band_4000 numeric(5,2) not null default 0,
+  band_5000 numeric(5,2) not null default 0,
+  band_6300 numeric(5,2) not null default 0,
+  band_8000 numeric(5,2) not null default 0,
+  band_10000 numeric(5,2) not null default 0,
+  band_12500 numeric(5,2) not null default 0,
+  band_16000 numeric(5,2) not null default 0,
+  band_18000 numeric(5,2) not null default 0,
+  band_20000 numeric(5,2) not null default 0,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   unique (user_id, name)
@@ -135,19 +162,73 @@ alter table if exists public.recently_played alter column played_at set default 
 alter table if exists public.equalizer_presets add column if not exists id uuid default gen_random_uuid();
 alter table if exists public.equalizer_presets add column if not exists user_id uuid references auth.users(id) on delete cascade;
 alter table if exists public.equalizer_presets add column if not exists name text;
-alter table if exists public.equalizer_presets add column if not exists band_60 numeric(5,2) default 0;
-alter table if exists public.equalizer_presets add column if not exists band_230 numeric(5,2) default 0;
-alter table if exists public.equalizer_presets add column if not exists band_910 numeric(5,2) default 0;
-alter table if exists public.equalizer_presets add column if not exists band_3600 numeric(5,2) default 0;
-alter table if exists public.equalizer_presets add column if not exists band_14000 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_20 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_25 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_31 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_40 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_50 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_63 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_80 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_100 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_125 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_160 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_200 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_250 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_315 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_400 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_500 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_630 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_800 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_1000 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_1250 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_1600 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_2000 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_2500 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_3150 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_4000 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_5000 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_6300 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_8000 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_10000 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_12500 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_16000 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_18000 numeric(5,2) default 0;
+alter table if exists public.equalizer_presets add column if not exists band_20000 numeric(5,2) default 0;
 alter table if exists public.equalizer_presets add column if not exists created_at timestamptz default now();
 alter table if exists public.equalizer_presets add column if not exists updated_at timestamptz default now();
 alter table if exists public.equalizer_presets alter column id set default gen_random_uuid();
-alter table if exists public.equalizer_presets alter column band_60 set default 0;
-alter table if exists public.equalizer_presets alter column band_230 set default 0;
-alter table if exists public.equalizer_presets alter column band_910 set default 0;
-alter table if exists public.equalizer_presets alter column band_3600 set default 0;
-alter table if exists public.equalizer_presets alter column band_14000 set default 0;
+alter table if exists public.equalizer_presets alter column band_20 set default 0;
+alter table if exists public.equalizer_presets alter column band_25 set default 0;
+alter table if exists public.equalizer_presets alter column band_31 set default 0;
+alter table if exists public.equalizer_presets alter column band_40 set default 0;
+alter table if exists public.equalizer_presets alter column band_50 set default 0;
+alter table if exists public.equalizer_presets alter column band_63 set default 0;
+alter table if exists public.equalizer_presets alter column band_80 set default 0;
+alter table if exists public.equalizer_presets alter column band_100 set default 0;
+alter table if exists public.equalizer_presets alter column band_125 set default 0;
+alter table if exists public.equalizer_presets alter column band_160 set default 0;
+alter table if exists public.equalizer_presets alter column band_200 set default 0;
+alter table if exists public.equalizer_presets alter column band_250 set default 0;
+alter table if exists public.equalizer_presets alter column band_315 set default 0;
+alter table if exists public.equalizer_presets alter column band_400 set default 0;
+alter table if exists public.equalizer_presets alter column band_500 set default 0;
+alter table if exists public.equalizer_presets alter column band_630 set default 0;
+alter table if exists public.equalizer_presets alter column band_800 set default 0;
+alter table if exists public.equalizer_presets alter column band_1000 set default 0;
+alter table if exists public.equalizer_presets alter column band_1250 set default 0;
+alter table if exists public.equalizer_presets alter column band_1600 set default 0;
+alter table if exists public.equalizer_presets alter column band_2000 set default 0;
+alter table if exists public.equalizer_presets alter column band_2500 set default 0;
+alter table if exists public.equalizer_presets alter column band_3150 set default 0;
+alter table if exists public.equalizer_presets alter column band_4000 set default 0;
+alter table if exists public.equalizer_presets alter column band_5000 set default 0;
+alter table if exists public.equalizer_presets alter column band_6300 set default 0;
+alter table if exists public.equalizer_presets alter column band_8000 set default 0;
+alter table if exists public.equalizer_presets alter column band_10000 set default 0;
+alter table if exists public.equalizer_presets alter column band_12500 set default 0;
+alter table if exists public.equalizer_presets alter column band_16000 set default 0;
+alter table if exists public.equalizer_presets alter column band_18000 set default 0;
+alter table if exists public.equalizer_presets alter column band_20000 set default 0;
 alter table if exists public.equalizer_presets alter column created_at set default now();
 alter table if exists public.equalizer_presets alter column updated_at set default now();
 

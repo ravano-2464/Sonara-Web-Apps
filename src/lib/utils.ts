@@ -23,8 +23,12 @@ export function clamp(value: number, min: number, max: number) {
 
 export function formatFrequencyLabel(freq: number): string {
     if (freq >= 1000) {
-        const kilo = freq / 1000;
-        return `${Number.isInteger(kilo) ? kilo : kilo.toFixed(1)}kHz`;
+        const kilo = Math.round((freq / 1000) * 100) / 100;
+        const value = kilo
+            .toFixed(2)
+            .replace(/\.00$/, "")
+            .replace(/(\.\d)0$/, "$1");
+        return `${value}kHz`;
     }
 
     return `${freq}Hz`;

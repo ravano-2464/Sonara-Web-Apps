@@ -96,7 +96,7 @@ class AudioEngine {
 
     this.initializeGraph();
 
-    const firstFilter = this.filters.get(60);
+    const firstFilter = this.filters.get(EQ_BANDS[0]);
     const targetNode = firstFilter ?? this.analyser;
 
     if (!targetNode) {
