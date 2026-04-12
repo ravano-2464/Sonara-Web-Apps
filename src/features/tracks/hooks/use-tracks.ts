@@ -30,7 +30,7 @@ export function useTracks({ search, genre }: UseTracksOptions = {}) {
     if (search && search.trim().length > 0) {
       const safeTerm = search.trim().replaceAll(",", " ");
       query = query.or(
-        `title.ilike.%${safeTerm}%,artist.ilike.%${safeTerm}%,album.ilike.%${safeTerm}%`,
+        `title.ilike.%${safeTerm}%,artist.ilike.%${safeTerm}%,album.ilike.%${safeTerm}%,lyrics.ilike.%${safeTerm}%`,
       );
     }
 

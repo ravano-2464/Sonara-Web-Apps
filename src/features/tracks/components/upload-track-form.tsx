@@ -20,6 +20,7 @@ export function UploadTrackForm({ userId, onUploaded }: UploadTrackFormProps) {
   const [artist, setArtist] = useState("");
   const [album, setAlbum] = useState("");
   const [genre, setGenre] = useState("");
+  const [lyrics, setLyrics] = useState("");
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreviewUrl, setCoverPreviewUrl] = useState<string | null>(null);
@@ -31,6 +32,7 @@ export function UploadTrackForm({ userId, onUploaded }: UploadTrackFormProps) {
   const metadataRequestRef = useRef(0);
   const titleTouchedRef = useRef(false);
   const artistTouchedRef = useRef(false);
+  const lyricsTouchedRef = useRef(false);
   const manualCoverSelectedRef = useRef(false);
   const embeddedCoverActiveRef = useRef(false);
 
@@ -74,6 +76,7 @@ export function UploadTrackForm({ userId, onUploaded }: UploadTrackFormProps) {
       artist,
       album,
       genre,
+      lyrics,
       audioFile,
       coverFile: coverFile ?? undefined,
     });
@@ -89,6 +92,7 @@ export function UploadTrackForm({ userId, onUploaded }: UploadTrackFormProps) {
     setArtist("");
     setAlbum("");
     setGenre("");
+    setLyrics("");
     setAudioFile(null);
     setCoverFile(null);
     setCoverPreviewFromFile(null);
@@ -96,6 +100,7 @@ export function UploadTrackForm({ userId, onUploaded }: UploadTrackFormProps) {
     setEmbeddedCoverDetected(false);
     titleTouchedRef.current = false;
     artistTouchedRef.current = false;
+    lyricsTouchedRef.current = false;
     manualCoverSelectedRef.current = false;
     embeddedCoverActiveRef.current = false;
     onUploaded();
@@ -148,6 +153,18 @@ export function UploadTrackForm({ userId, onUploaded }: UploadTrackFormProps) {
         />
       </div>
 
+      <textarea
+        value={lyrics}
+        onChange={(event) => {
+          lyricsTouchedRef.current = true;
+          setLyrics(event.target.value);
+        }}
+        placeholder={t("upload.lyricsOptional")}
+        aria-label={t("upload.lyricsOptional")}
+        rows={4}
+        className="mt-3 w-full resize-y rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400"
+      />
+
       <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>
           <input
@@ -175,6 +192,7 @@ export function UploadTrackForm({ userId, onUploaded }: UploadTrackFormProps) {
 
               titleTouchedRef.current = false;
               artistTouchedRef.current = false;
+              lyricsTouchedRef.current = false;
 
               const requestId = metadataRequestRef.current + 1;
               metadataRequestRef.current = requestId;
@@ -195,6 +213,10 @@ export function UploadTrackForm({ userId, onUploaded }: UploadTrackFormProps) {
               if (!artistTouchedRef.current) {
                 setArtist(metadata.artist ?? "");
                 hasDetectedText = hasDetectedText || Boolean(metadata.artist);
+              }
+
+              if (!lyricsTouchedRef.current) {
+                setLyrics(metadata.lyrics ?? "");
               }
 
               setMetadataDetected(hasDetectedText);

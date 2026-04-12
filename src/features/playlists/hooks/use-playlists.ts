@@ -10,6 +10,14 @@ import { mapSupabaseErrorMessage } from "@/lib/supabase/error";
 import type { Playlist } from "@/types/models";
 
 const PLAYLIST_TOAST_DURATION_MS = 5000;
+const PLAYLIST_COVER_BUCKET = "track-covers";
+
+function slugifyFileName(name: string) {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9.\-_]+/g, "-")
+    .replace(/-+/g, "-");
+}
 
 export function usePlaylists(userId: string | undefined) {
   const { t } = useI18n();
@@ -83,7 +91,7 @@ export function usePlaylists(userId: string | undefined) {
   }, [fetchPlaylists]);
 
   const createPlaylist = useCallback(
-    async (name: string, description: string) => {
+    async (name: string, description: string, coverFile?: File) => {
       if (!userId) {
         const message = t("playlist.userNotFound");
         showPlaylistToast({
@@ -95,10 +103,42 @@ export function usePlaylists(userId: string | undefined) {
       }
 
       const supabase = getSupabaseBrowserClient();
+      let coverUrl: string | null = null;
+
+      if (coverFile) {
+        const timestamp = Date.now();
+        const safeCoverName = slugifyFileName(coverFile.name);
+        const coverPath = `${userId}/playlists/${timestamp}-${safeCoverName}`;
+
+        const { error: coverUploadError } = await supabase.storage
+          .from(PLAYLIST_COVER_BUCKET)
+          .upload(coverPath, coverFile, {
+            contentType: coverFile.type,
+            upsert: false,
+          });
+
+        if (coverUploadError) {
+          const message = mapSupabaseErrorMessage(coverUploadError.message);
+          showPlaylistToast({
+            title: t("playlist.toastFailedTitle"),
+            description: message,
+            tone: "error",
+          });
+          return { error: message };
+        }
+
+        const {
+          data: { publicUrl },
+        } = supabase.storage.from(PLAYLIST_COVER_BUCKET).getPublicUrl(coverPath);
+
+        coverUrl = publicUrl;
+      }
+
       const { error: insertError } = await supabase.from("playlists").insert({
         user_id: userId,
         name,
         description: description.trim() || null,
+        cover_url: coverUrl,
       });
 
       if (insertError) {

@@ -30,6 +30,7 @@ create table if not exists public.tracks (
   album text,
   duration numeric(10,2) not null check (duration >= 0),
   genre text,
+  lyrics text,
   cover_url text,
   audio_url text not null,
   created_at timestamptz not null default now()
@@ -125,6 +126,7 @@ alter table if exists public.tracks add column if not exists artist text;
 alter table if exists public.tracks add column if not exists album text;
 alter table if exists public.tracks add column if not exists duration numeric(10,2);
 alter table if exists public.tracks add column if not exists genre text;
+alter table if exists public.tracks add column if not exists lyrics text;
 alter table if exists public.tracks add column if not exists cover_url text;
 alter table if exists public.tracks add column if not exists audio_url text;
 alter table if exists public.tracks add column if not exists created_at timestamptz default now();

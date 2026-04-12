@@ -14,7 +14,7 @@ interface TrackListProps {
   isPlaying: boolean;
   favoriteTrackIds?: Set<string>;
   onPlayTrack: (track: Track, index: number) => void;
-  onToggleFavorite?: (trackId: string) => void;
+  onToggleFavorite?: (trackId: string, trackTitle?: string) => void;
   emptyMessage?: string;
   actionSlot?: (track: Track) => ReactNode;
 }
@@ -82,7 +82,7 @@ export function TrackList({
                 {onToggleFavorite ? (
                   <button
                     type="button"
-                    onClick={() => onToggleFavorite(track.id)}
+                    onClick={() => onToggleFavorite(track.id, track.title)}
                     aria-label={isFav ? t("trackList.removeFavorite") : t("trackList.addFavorite")}
                     className={cn(
                       "inline-flex h-8 w-8 items-center justify-center rounded-full",

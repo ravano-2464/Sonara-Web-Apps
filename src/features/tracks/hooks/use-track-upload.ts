@@ -13,6 +13,7 @@ interface UploadPayload {
   artist: string;
   album?: string;
   genre?: string;
+  lyrics?: string;
   audioFile: File;
   coverFile?: File;
 }
@@ -130,6 +131,7 @@ export function useTrackUpload(userId: string | undefined) {
       artist,
       album,
       genre,
+      lyrics,
       audioFile,
       coverFile,
     }: UploadPayload): Promise<UploadTrackResult> => {
@@ -241,6 +243,7 @@ export function useTrackUpload(userId: string | undefined) {
           artist,
           album: album?.trim() || null,
           genre: genre?.trim() || null,
+          lyrics: lyrics?.trim() || null,
           duration,
           cover_url: coverUrl,
           audio_url: audioUrl,

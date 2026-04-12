@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import {
+  FileText,
   ListMusic,
   Pause,
   Play,
@@ -14,6 +15,7 @@ import {
 } from "lucide-react";
 
 import { useI18n } from "@/components/providers/i18n-provider";
+import { LyricsPanel } from "@/components/player/lyrics-panel";
 import { QueuePanel } from "@/components/player/queue-panel";
 import { AudioVisualizer } from "@/features/audio/components/audio-visualizer";
 import { EqualizerPanel } from "@/features/audio/components/equalizer-panel";
@@ -25,6 +27,7 @@ import { usePlayerStore } from "@/stores/player-store";
 export function PlayerBar() {
   const { t } = useI18n();
   const [showEqualizer, setShowEqualizer] = useState(false);
+  const [showLyrics, setShowLyrics] = useState(false);
 
   const activeTrack = usePlayerStore((state) => state.activeTrack);
   const queue = usePlayerStore((state) => state.queue);
@@ -59,9 +62,12 @@ export function PlayerBar() {
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 border-t border-zinc-800 bg-zinc-950/95 backdrop-blur">
-      {showEqualizer || isQueueOpen ? (
-        <div className="grid gap-3 border-b border-zinc-800 px-3 py-3 md:grid-cols-2 md:px-6">
+      {showEqualizer || showLyrics || isQueueOpen ? (
+        <div className="grid gap-3 border-b border-zinc-800 px-3 py-3 md:grid-cols-3 md:px-6">
           {showEqualizer ? <EqualizerPanel onClose={() => setShowEqualizer(false)} /> : null}
+          {showLyrics ? (
+            <LyricsPanel track={activeTrack} onClose={() => setShowLyrics(false)} />
+          ) : null}
           {isQueueOpen ? (
             <QueuePanel
               queue={queue}
@@ -70,7 +76,12 @@ export function PlayerBar() {
               onClose={toggleQueue}
             />
           ) : null}
-          <div className={cn("md:col-span-2", !showEqualizer && !isQueueOpen ? "hidden" : "") }>
+          <div
+            className={cn(
+              "md:col-span-3",
+              !showEqualizer && !showLyrics && !isQueueOpen ? "hidden" : "",
+            )}
+          >
             <AudioVisualizer analyser={analyser} isPlaying={isPlaying} />
           </div>
         </div>
@@ -198,6 +209,17 @@ export function PlayerBar() {
             )}
           >
             <ListMusic className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setShowLyrics((value) => !value)}
+            aria-label={t("player.toggleLyrics")}
+            className={cn(
+              "inline-flex h-8 w-8 items-center justify-center rounded-full",
+              showLyrics ? "text-cyan-300" : "text-zinc-500 hover:text-zinc-200",
+            )}
+          >
+            <FileText className="h-4 w-4" />
           </button>
           <Volume2 className="h-4 w-4 text-zinc-500" />
           <input

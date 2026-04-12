@@ -68,6 +68,16 @@ export default function HomePage() {
                   href={`/playlists/${playlist.id}`}
                   className="block rounded-xl border border-zinc-800 bg-zinc-900/70 p-3 text-sm text-zinc-200 transition hover:border-cyan-400/70"
                 >
+                  {playlist.cover_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={playlist.cover_url}
+                      alt={`${playlist.name} cover`}
+                      className="mb-2 h-16 w-full rounded-md object-cover"
+                    />
+                  ) : (
+                    <div className="mb-2 h-16 w-full rounded-md bg-gradient-to-br from-cyan-500/30 via-blue-500/20 to-zinc-800/70" />
+                  )}
                   <p className="truncate font-medium">{playlist.name}</p>
                   <p className="mt-1 truncate text-xs text-zinc-500">
                     {playlist.description ?? t("home.noDescription")}

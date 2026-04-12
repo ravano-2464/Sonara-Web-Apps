@@ -8,6 +8,7 @@ interface ParsedFileNameMetadata {
 export interface AudioFileMetadataResult {
   title: string | null;
   artist: string | null;
+  lyrics: string | null;
   coverFile: File | null;
 }
 
@@ -46,6 +47,61 @@ function parseMetadataFromFileName(fileName: string): ParsedFileNameMetadata {
   };
 }
 
+function normalizeLyrics(values: Array<string | null | undefined>) {
+  const normalized = values
+    .map((value) => normalizeText(value))
+    .filter((value): value is string => Boolean(value));
+
+  if (normalized.length === 0) {
+    return null;
+  }
+
+  const deduplicated = Array.from(new Set(normalized));
+  return normalizeText(deduplicated.join("\n\n"));
+}
+
+function extractLyricsFromUnknown(value: unknown, collector: string[]) {
+  if (typeof value === "string") {
+    collector.push(value);
+    return;
+  }
+
+  if (Array.isArray(value)) {
+    value.forEach((entry) => extractLyricsFromUnknown(entry, collector));
+    return;
+  }
+
+  if (value && typeof value === "object") {
+    const record = value as Record<string, unknown>;
+    extractLyricsFromUnknown(record.text, collector);
+    extractLyricsFromUnknown(record.lyrics, collector);
+    extractLyricsFromUnknown(record.lyric, collector);
+    extractLyricsFromUnknown(record.value, collector);
+  }
+}
+
+function extractLyricsFromNativeTags(nativeTags: Record<string, Array<{ id?: string; value?: unknown }>>) {
+  const lyricEntries: string[] = [];
+
+  Object.values(nativeTags).forEach((tags) => {
+    tags.forEach((tag) => {
+      const normalizedTagId = tag.id?.toLowerCase() ?? "";
+      const isLyricTag = normalizedTagId.includes("lyric") ||
+        normalizedTagId === "uslt" ||
+        normalizedTagId === "sylt" ||
+        normalizedTagId === "©lyr";
+
+      if (!isLyricTag) {
+        return;
+      }
+
+      extractLyricsFromUnknown(tag.value, lyricEntries);
+    });
+  });
+
+  return normalizeLyrics(lyricEntries);
+}
+
 function inferImageExtension(mimeType: string) {
   const normalized = mimeType.toLowerCase();
 
@@ -82,17 +138,23 @@ export async function extractAudioFileMetadata(file: File): Promise<AudioFileMet
     const metadataArtist = normalizeText(common.artist) ??
       normalizeText(common.artists?.join(", "));
     const metadataTitle = normalizeText(common.title);
+    const metadataLyrics = normalizeLyrics(common.lyrics ?? []);
+    const nativeLyrics = extractLyricsFromNativeTags(
+      parsed.native as Record<string, Array<{ id?: string; value?: unknown }>>,
+    );
     const coverFile = buildCoverFileFromPicture(common.picture?.[0]);
 
     return {
       title: metadataTitle ?? metadataFromName.title,
       artist: metadataArtist ?? metadataFromName.artist,
+      lyrics: metadataLyrics ?? nativeLyrics,
       coverFile,
     };
   } catch {
     return {
       title: metadataFromName.title,
       artist: metadataFromName.artist,
+      lyrics: null,
       coverFile: null,
     };
   }

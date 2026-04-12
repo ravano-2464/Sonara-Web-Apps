@@ -47,6 +47,7 @@ export interface Database {
           album: string | null;
           duration: number;
           genre: string | null;
+          lyrics: string | null;
           cover_url: string | null;
           audio_url: string;
           created_at: string;
@@ -59,6 +60,7 @@ export interface Database {
           album?: string | null;
           duration: number;
           genre?: string | null;
+          lyrics?: string | null;
           cover_url?: string | null;
           audio_url: string;
           created_at?: string;
@@ -71,6 +73,7 @@ export interface Database {
           album?: string | null;
           duration?: number;
           genre?: string | null;
+          lyrics?: string | null;
           cover_url?: string | null;
           audio_url?: string;
           created_at?: string;
