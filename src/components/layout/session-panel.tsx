@@ -7,13 +7,13 @@ import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { useLogoutConfirm } from "@/hooks/use-logout-confirm";
 
 interface SessionPanelProps {
-  email?: string;
+  username?: string;
   sidebarOpen: boolean;
   onToggleSidebar: () => void;
 }
 
 export function SessionPanel({
-  email,
+  username,
   sidebarOpen,
   onToggleSidebar,
 }: SessionPanelProps) {
@@ -36,7 +36,7 @@ export function SessionPanel({
           <ThemeToggle />
           <div className="inline-flex items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-900/70 px-3 py-2 text-xs text-zinc-300">
             <User2 className="h-3.5 w-3.5 text-zinc-500" />
-            <span className="max-w-48 truncate">{email ?? "Signed in"}</span>
+            <span className="max-w-48 truncate">{username ?? "Signed in"}</span>
           </div>
           <button
             type="button"

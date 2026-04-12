@@ -66,7 +66,7 @@ export function usePlaylistDetail(
     }
 
     setPlaylist(playlistResult.data);
-    setTracks((tracksResult.data as PlaylistTrackWithTrack[] | null) ?? []);
+    setTracks((tracksResult.data as unknown as PlaylistTrackWithTrack[] | null) ?? []);
     setLoading(false);
   }, [playlistId, userId]);
 

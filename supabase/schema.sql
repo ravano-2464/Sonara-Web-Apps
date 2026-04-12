@@ -157,6 +157,9 @@ create index if not exists idx_playlists_user_id on public.playlists (user_id);
 create index if not exists idx_playlist_tracks_playlist_position on public.playlist_tracks (playlist_id, position);
 create index if not exists idx_favorites_user_id on public.favorites (user_id);
 create index if not exists idx_recently_played_user_played on public.recently_played (user_id, played_at desc);
+create unique index if not exists idx_users_display_name_lower_unique
+on public.users ((lower(display_name)))
+where display_name is not null;
 
 drop trigger if exists trg_users_updated_at on public.users;
 create trigger trg_users_updated_at
@@ -181,13 +184,49 @@ security definer
 set search_path = public
 as $$
 begin
-  insert into public.users (id, email)
-  values (new.id, new.email)
+  insert into public.users (id, email, display_name)
+  values (
+    new.id,
+    new.email,
+    nullif(
+      trim(
+        coalesce(
+          new.raw_user_meta_data ->> 'display_name',
+          new.raw_user_meta_data ->> 'username'
+        )
+      ),
+      ''
+    )
+  )
   on conflict (id) do update
     set email = excluded.email,
+        display_name = coalesce(excluded.display_name, public.users.display_name),
         updated_at = now();
   return new;
 end;
+$$;
+
+-- Resolve username to email for password login.
+create or replace function public.resolve_login_email(login_identifier text)
+returns text
+language sql
+security definer
+set search_path = public
+as $$
+  with normalized as (
+    select lower(trim(login_identifier)) as value
+  )
+  select u.email
+  from public.users u
+  cross join normalized n
+  where u.email is not null
+    and (
+      lower(u.email) = n.value
+      or lower(coalesce(u.display_name, '')) = n.value
+    )
+  order by
+    case when lower(u.email) = n.value then 0 else 1 end
+  limit 1;
 $$;
 
 drop trigger if exists on_auth_user_created on auth.users;

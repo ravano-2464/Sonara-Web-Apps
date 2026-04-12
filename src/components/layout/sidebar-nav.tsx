@@ -25,11 +25,11 @@ const navItems = [
 ];
 
 interface SidebarNavProps {
-  email?: string;
+  username?: string;
   desktopOpen: boolean;
 }
 
-export function SidebarNav({ email, desktopOpen }: SidebarNavProps) {
+export function SidebarNav({ username, desktopOpen }: SidebarNavProps) {
   const pathname = usePathname();
   const { open, setOpen, loading, confirmLogout } = useLogoutConfirm();
 
@@ -78,7 +78,7 @@ export function SidebarNav({ email, desktopOpen }: SidebarNavProps) {
         </nav>
 
         <div className="mt-auto space-y-2 border-t border-zinc-800 pt-4">
-          <p className="truncate text-xs text-zinc-500">{email ?? "Signed in"}</p>
+          <p className="truncate text-xs text-zinc-500">{username ?? "Signed in"}</p>
           <button
             type="button"
             onClick={() => setOpen(true)}
@@ -112,7 +112,7 @@ export function SidebarNav({ email, desktopOpen }: SidebarNavProps) {
           })}
         </div>
         <div className="mt-2 flex items-center justify-between gap-2 rounded-lg border border-zinc-800 bg-zinc-900/70 px-3 py-2">
-          <p className="truncate text-xs text-zinc-400">{email ?? "Signed in"}</p>
+          <p className="truncate text-xs text-zinc-400">{username ?? "Signed in"}</p>
           <button
             type="button"
             onClick={() => setOpen(true)}

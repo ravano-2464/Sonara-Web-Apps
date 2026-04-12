@@ -43,7 +43,7 @@ export function useRecentlyPlayed(userId: string | undefined) {
       return;
     }
 
-    setItems((data as RecentlyPlayedWithTrack[] | null) ?? []);
+    setItems((data as unknown as RecentlyPlayedWithTrack[] | null) ?? []);
     setLoading(false);
   }, [userId]);
 

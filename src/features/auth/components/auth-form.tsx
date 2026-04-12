@@ -21,6 +21,8 @@ export function AuthForm({ mode }: AuthFormProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  const [username, setUsername] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -57,26 +59,87 @@ export function AuthForm({ mode }: AuthFormProps) {
   };
 
   const submit = async () => {
+    const normalizedUsername = username.trim();
+    const normalizedIdentifier = identifier.trim();
+    const normalizedEmail = email.trim();
+
+    if (isLogin && !normalizedIdentifier) {
+      setError("Username wajib diisi.");
+      return;
+    }
+
+    if (!isLogin && normalizedUsername.length < 3) {
+      setError("Username minimal 3 karakter.");
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
     const supabase = getSupabaseBrowserClient();
+    type AuthSubmitResult =
+      | Awaited<ReturnType<typeof supabase.auth.signInWithPassword>>
+      | Awaited<ReturnType<typeof supabase.auth.signUp>>;
 
-    const result = isLogin
-      ? await supabase.auth.signInWithPassword({
-          email,
-          password,
-        })
-      : await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo:
-              typeof window !== "undefined"
-                ? `${window.location.origin}/home`
-                : undefined,
+    let result: AuthSubmitResult;
+
+    if (isLogin) {
+      let loginEmail = normalizedIdentifier;
+
+      if (!loginEmail.includes("@")) {
+        const { data: resolvedEmail, error: resolveError } = await supabase.rpc(
+          "resolve_login_email",
+          {
+            login_identifier: normalizedIdentifier,
           },
-        });
+        );
+
+        if (resolveError) {
+          setLoading(false);
+          const message = mapSupabaseErrorMessage(resolveError.message);
+          setError(message);
+          showAuthToast({
+            title: "Login Gagal",
+            description: message,
+            tone: "error",
+          });
+          return;
+        }
+
+        if (!resolvedEmail) {
+          setLoading(false);
+          const message = "Username tidak ditemukan.";
+          setError(message);
+          showAuthToast({
+            title: "Login Gagal",
+            description: message,
+            tone: "error",
+          });
+          return;
+        }
+
+        loginEmail = resolvedEmail;
+      }
+
+      result = await supabase.auth.signInWithPassword({
+        email: loginEmail,
+        password,
+      });
+    } else {
+      result = await supabase.auth.signUp({
+        email: normalizedEmail,
+        password,
+        options: {
+          data: {
+            display_name: normalizedUsername,
+          },
+          emailRedirectTo:
+            typeof window !== "undefined"
+              ? `${window.location.origin}/home`
+              : undefined,
+        },
+      });
+    }
 
     setLoading(false);
 
@@ -119,7 +182,7 @@ export function AuthForm({ mode }: AuthFormProps) {
       <h1 className="text-xl font-semibold text-zinc-50">Welcome to Sonara</h1>
       <p className="mt-1 text-sm text-zinc-400">
         {isLogin
-          ? "Sign in to access your library, playlists, and equalizer presets."
+          ? "Sign in with your username to access your library and playlists."
           : "Create account to start uploading tracks and building playlists."}
       </p>
 
@@ -143,13 +206,32 @@ export function AuthForm({ mode }: AuthFormProps) {
       </div>
 
       <div className="mt-4 space-y-3">
-        <Input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          required
-        />
+        {isLogin ? (
+          <Input
+            type="text"
+            placeholder="Username atau Email"
+            value={identifier}
+            onChange={(event) => setIdentifier(event.target.value)}
+            required
+          />
+        ) : (
+          <>
+            <Input
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
+              required
+            />
+            <Input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              required
+            />
+          </>
+        )}
         <Input
           type="password"
           placeholder="Password"

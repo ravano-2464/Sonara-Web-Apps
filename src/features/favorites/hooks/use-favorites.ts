@@ -42,7 +42,7 @@ export function useFavorites(userId: string | undefined) {
       return;
     }
 
-    setFavorites((data as FavoriteWithTrack[] | null) ?? []);
+    setFavorites((data as unknown as FavoriteWithTrack[] | null) ?? []);
     setLoading(false);
   }, [userId]);
 
