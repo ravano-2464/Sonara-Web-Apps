@@ -240,6 +240,16 @@ export function AuthForm({ mode }: AuthFormProps) {
           minLength={6}
           required
         />
+        {isLogin ? (
+          <div className="flex justify-end">
+            <Link
+              href="/forgot-password"
+              className="text-xs text-cyan-300 transition hover:text-cyan-200"
+            >
+              Forgot password?
+            </Link>
+          </div>
+        ) : null}
         <Button onClick={submit} disabled={loading} className="w-full">
           {loading ? "Processing..." : isLogin ? "Sign In" : "Create Account"}
         </Button>

@@ -60,88 +60,146 @@ Sonara is an MVP-ready music player web app with:
 ## 🗂️ Folder Structure
 
 ```text
-sonara-app/
-  supabase/
-    schema.sql
-  src/
-    app/
-      (auth)/auth/page.tsx
-      (app)/
-        layout.tsx
-        home/page.tsx
-        library/page.tsx
-        playlists/page.tsx
-        playlists/[id]/page.tsx
-        favorites/page.tsx
-        recently-played/page.tsx
-        loading.tsx
-        error.tsx
-      layout.tsx
-      page.tsx
-      globals.css
-    components/
-      layout/
-        app-shell.tsx
-        sidebar-nav.tsx
-        page-header.tsx
-      player/
-        player-bar.tsx
-        queue-panel.tsx
-      providers/
-        app-providers.tsx
-      ui/
-        button.tsx
-        input.tsx
-        slider.tsx
-    features/
-      auth/components/auth-form.tsx
-      audio/
-        components/
-          audio-runtime-provider.tsx
-          audio-visualizer.tsx
-          equalizer-panel.tsx
-          player-waveform.tsx
-        hooks/
-          use-audio-runtime.ts
-          use-playback-shortcuts.ts
-          use-visualizer.ts
-          use-waveform.ts
-        lib/
-          audio-engine.ts
-          equalizer-presets.ts
-        stores/
-          equalizer-store.ts
-      favorites/hooks/use-favorites.ts
-      history/
-        components/recently-played-list.tsx
-        hooks/use-recently-played.ts
-      playlists/
-        components/playlist-list.tsx
-        components/playlist-detail-manager.tsx
-        hooks/use-playlists.ts
-        hooks/use-playlist-detail.ts
-      tracks/
-        components/album-grid.tsx
-        components/track-list.tsx
-        components/upload-track-form.tsx
-        hooks/use-tracks.ts
-        hooks/use-track-upload.ts
-    hooks/
-      use-session-user.ts
-    lib/
-      env.ts
-      utils.ts
-      supabase/
-        browser.ts
-        server.ts
-        middleware.ts
-    stores/
-      player-store.ts
-    types/
-      database.ts
-      models.ts
-  middleware.ts
-  .env.example
+📦sonara-app/
+├── 📁 public
+│   ├── 🖼️ file.svg
+│   ├── 🖼️ globe.svg
+│   ├── 🖼️ next.svg
+│   ├── 🖼️ vercel.svg
+│   └── 🖼️ window.svg
+├── 📁 src
+│   ├── 📁 app
+│   │   ├── 📁 (app)
+│   │   │   ├── 📁 favorites
+│   │   │   │   └── 📄 page.tsx
+│   │   │   ├── 📁 home
+│   │   │   │   └── 📄 page.tsx
+│   │   │   ├── 📁 library
+│   │   │   │   └── 📄 page.tsx
+│   │   │   ├── 📁 playlists
+│   │   │   │   ├── 📁 [id]
+│   │   │   │   │   └── 📄 page.tsx
+│   │   │   │   └── 📄 page.tsx
+│   │   │   ├── 📁 recently-played
+│   │   │   │   └── 📄 page.tsx
+│   │   │   ├── 📄 error.tsx
+│   │   │   ├── 📄 layout.tsx
+│   │   │   └── 📄 loading.tsx
+│   │   ├── 📁 (auth)
+│   │   │   └── 📁 auth
+│   │   │       ├── 📁 login
+│   │   │       │   └── 📄 page.tsx
+│   │   │       ├── 📁 register
+│   │   │       │   └── 📄 page.tsx
+│   │   │       ├── 📄 layout.tsx
+│   │   │       └── 📄 page.tsx
+│   │   ├── 📁 forgot-password
+│   │   │   └── 📄 page.tsx
+│   │   ├── 📁 reset-password
+│   │   │   └── 📄 page.tsx
+│   │   ├── 📄 favicon.ico
+│   │   ├── 🎨 globals.css
+│   │   ├── 📄 layout.tsx
+│   │   └── 📄 page.tsx
+│   ├── 📁 components
+│   │   ├── 📁 layout
+│   │   │   ├── 📄 app-shell.tsx
+│   │   │   ├── 📄 logout-confirm-modal.tsx
+│   │   │   ├── 📄 page-header.tsx
+│   │   │   ├── 📄 session-panel.tsx
+│   │   │   ├── 📄 sidebar-nav.tsx
+│   │   │   └── 📄 theme-toggle.tsx
+│   │   ├── 📁 player
+│   │   │   ├── 📄 player-bar.tsx
+│   │   │   └── 📄 queue-panel.tsx
+│   │   ├── 📁 providers
+│   │   │   ├── 📄 app-providers.tsx
+│   │   │   └── 📄 theme-provider.tsx
+│   │   └── 📁 ui
+│   │       ├── 📄 button.tsx
+│   │       ├── 📄 input.tsx
+│   │       ├── 📄 slider.tsx
+│   │       └── 📄 sonner.tsx
+│   ├── 📁 features
+│   │   ├── 📁 audio
+│   │   │   ├── 📁 components
+│   │   │   │   ├── 📄 audio-runtime-provider.tsx
+│   │   │   │   ├── 📄 audio-visualizer.tsx
+│   │   │   │   ├── 📄 equalizer-panel.tsx
+│   │   │   │   └── 📄 player-waveform.tsx
+│   │   │   ├── 📁 hooks
+│   │   │   │   ├── 📄 use-audio-runtime.ts
+│   │   │   │   ├── 📄 use-playback-shortcuts.ts
+│   │   │   │   ├── 📄 use-visualizer.ts
+│   │   │   │   └── 📄 use-waveform.ts
+│   │   │   ├── 📁 lib
+│   │   │   │   ├── 📄 audio-engine.ts
+│   │   │   │   └── 📄 equalizer-presets.ts
+│   │   │   └── 📁 stores
+│   │   │       └── 📄 equalizer-store.ts
+│   │   ├── 📁 auth
+│   │   │   └── 📁 components
+│   │   │       ├── 📄 auth-form.tsx
+│   │   │       ├── 📄 auth-toast-content.tsx
+│   │   │       ├── 📄 forgot-password-form.tsx
+│   │   │       └── 📄 reset-password-form.tsx
+│   │   ├── 📁 favorites
+│   │   │   └── 📁 hooks
+│   │   │       └── 📄 use-favorites.ts
+│   │   ├── 📁 history
+│   │   │   ├── 📁 components
+│   │   │   │   └── 📄 recently-played-list.tsx
+│   │   │   └── 📁 hooks
+│   │   │       └── 📄 use-recently-played.ts
+│   │   ├── 📁 playlists
+│   │   │   ├── 📁 components
+│   │   │   │   ├── 📄 playlist-detail-manager.tsx
+│   │   │   │   └── 📄 playlist-list.tsx
+│   │   │   └── 📁 hooks
+│   │   │       ├── 📄 use-playlist-detail.ts
+│   │   │       └── 📄 use-playlists.ts
+│   │   └── 📁 tracks
+│   │       ├── 📁 components
+│   │       │   ├── 📄 album-grid.tsx
+│   │       │   ├── 📄 track-list.tsx
+│   │       │   └── 📄 upload-track-form.tsx
+│   │       └── 📁 hooks
+│   │           ├── 📄 use-track-upload.ts
+│   │           └── 📄 use-tracks.ts
+│   ├── 📁 hooks
+│   │   ├── 📄 use-logout-confirm.tsx
+│   │   └── 📄 use-session-user.ts
+│   ├── 📁 lib
+│   │   ├── 📁 supabase
+│   │   │   ├── 📄 browser.ts
+│   │   │   ├── 📄 error.ts
+│   │   │   ├── 📄 middleware.ts
+│   │   │   └── 📄 server.ts
+│   │   ├── 📄 client.ts
+│   │   ├── 📄 env.ts
+│   │   ├── 📄 middleware.ts
+│   │   ├── 📄 server.ts
+│   │   └── 📄 utils.ts
+│   ├── 📁 stores
+│   │   └── 📄 player-store.ts
+│   └── 📁 types
+│       ├── 📄 database.ts
+│       └── 📄 models.ts
+├── 📁 supabase
+│   └── 📄 schema.sql
+├── ⚙️ .gitignore
+├── ⚙️ .prettierignore
+├── ⚙️ .prettierrc
+├── 📝 AGENTS.md
+├── 📝 README.md
+├── ⚙️ components.json
+├── 📄 eslint.config.mjs
+├── 📄 middleware.ts
+├── 📄 next.config.ts
+├── ⚙️ package-lock.json
+├── ⚙️ package.json
+├── 📄 postcss.config.mjs
+└── ⚙️ tsconfig.json
 ```
 
 ## 🛢️ Database Schema and Supabase Definitions
