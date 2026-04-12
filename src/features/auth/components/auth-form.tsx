@@ -5,8 +5,10 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 
+import { LanguageToggle } from "@/components/layout/language-toggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useI18n } from "@/components/providers/i18n-provider";
 import { AuthToastContent } from "@/features/auth/components/auth-toast-content";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 import { mapSupabaseErrorMessage } from "@/lib/supabase/error";
@@ -20,6 +22,7 @@ interface AuthFormProps {
 export function AuthForm({ mode }: AuthFormProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { t } = useI18n();
 
   const [username, setUsername] = useState("");
   const [identifier, setIdentifier] = useState("");
@@ -64,12 +67,12 @@ export function AuthForm({ mode }: AuthFormProps) {
     const normalizedEmail = email.trim();
 
     if (isLogin && !normalizedIdentifier) {
-      setError("Username wajib diisi.");
+      setError(t("auth.usernameRequired"));
       return;
     }
 
     if (!isLogin && normalizedUsername.length < 3) {
-      setError("Username minimal 3 karakter.");
+      setError(t("auth.usernameMin"));
       return;
     }
 
@@ -99,7 +102,7 @@ export function AuthForm({ mode }: AuthFormProps) {
           const message = mapSupabaseErrorMessage(resolveError.message);
           setError(message);
           showAuthToast({
-            title: "Login Gagal",
+            title: t("auth.loginFailedTitle"),
             description: message,
             tone: "error",
           });
@@ -108,10 +111,10 @@ export function AuthForm({ mode }: AuthFormProps) {
 
         if (!resolvedEmail) {
           setLoading(false);
-          const message = "Username tidak ditemukan.";
+          const message = t("auth.usernameNotFound");
           setError(message);
           showAuthToast({
-            title: "Login Gagal",
+            title: t("auth.loginFailedTitle"),
             description: message,
             tone: "error",
           });
@@ -147,7 +150,7 @@ export function AuthForm({ mode }: AuthFormProps) {
       const message = mapSupabaseErrorMessage(result.error.message);
       setError(message);
       showAuthToast({
-        title: isLogin ? "Login Gagal" : "Registrasi Gagal",
+        title: isLogin ? t("auth.loginFailedTitle") : t("auth.registerFailedTitle"),
         description: message,
         tone: "error",
       });
@@ -158,8 +161,8 @@ export function AuthForm({ mode }: AuthFormProps) {
 
     if (!isLogin && !result.data.session) {
       showAuthToast({
-        title: "Registrasi Berhasil",
-        description: "Akun berhasil dibuat. Cek email kamu untuk verifikasi sebelum login.",
+        title: t("auth.registerSuccessTitle"),
+        description: t("auth.registerVerifyDescription"),
         tone: "success",
       });
       router.push("/auth/login");
@@ -168,8 +171,8 @@ export function AuthForm({ mode }: AuthFormProps) {
     }
 
     showAuthToast({
-      title: isLogin ? "Login Berhasil" : "Registrasi Berhasil",
-      description: "Kamu akan diarahkan ke halaman utama.",
+      title: isLogin ? t("auth.loginSuccessTitle") : t("auth.registerSuccessTitle"),
+      description: t("auth.authSuccessDescription"),
       tone: "success",
     });
 
@@ -179,12 +182,15 @@ export function AuthForm({ mode }: AuthFormProps) {
 
   return (
     <section className="mx-auto w-full max-w-md rounded-2xl border border-zinc-800 bg-zinc-900/75 p-6 shadow-2xl shadow-black/40">
-      <h1 className="text-xl font-semibold text-zinc-50">Welcome to Sonara</h1>
-      <p className="mt-1 text-sm text-zinc-400">
-        {isLogin
-          ? "Sign in with your username to access your library and playlists."
-          : "Create account to start uploading tracks and building playlists."}
-      </p>
+      <div className="flex items-start justify-between gap-2">
+        <div>
+          <h1 className="text-xl font-semibold text-zinc-50">{t("auth.welcome")}</h1>
+          <p className="mt-1 text-sm text-zinc-400">
+            {isLogin ? t("auth.signInDescription") : t("auth.signUpDescription")}
+          </p>
+        </div>
+        <LanguageToggle className="shrink-0" />
+      </div>
 
       <div className="mt-4 grid grid-cols-2 gap-2 rounded-lg bg-zinc-950 p-1">
         <Link
@@ -193,7 +199,7 @@ export function AuthForm({ mode }: AuthFormProps) {
             isLogin ? "bg-cyan-400 text-zinc-950" : "text-zinc-400 hover:text-zinc-200"
           }`}
         >
-          <span className="flex h-full items-center justify-center">Sign In</span>
+          <span className="flex h-full items-center justify-center">{t("auth.signInTab")}</span>
         </Link>
         <Link
           href={`/auth/register${nextQuery}`}
@@ -201,7 +207,7 @@ export function AuthForm({ mode }: AuthFormProps) {
             !isLogin ? "bg-cyan-400 text-zinc-950" : "text-zinc-400 hover:text-zinc-200"
           }`}
         >
-          <span className="flex h-full items-center justify-center">Register</span>
+          <span className="flex h-full items-center justify-center">{t("auth.registerTab")}</span>
         </Link>
       </div>
 
@@ -209,7 +215,7 @@ export function AuthForm({ mode }: AuthFormProps) {
         {isLogin ? (
           <Input
             type="text"
-            placeholder="Username atau Email"
+            placeholder={t("auth.identifierPlaceholder")}
             value={identifier}
             onChange={(event) => setIdentifier(event.target.value)}
             required
@@ -218,14 +224,14 @@ export function AuthForm({ mode }: AuthFormProps) {
           <>
             <Input
               type="text"
-              placeholder="Username"
+              placeholder={t("auth.usernamePlaceholder")}
               value={username}
               onChange={(event) => setUsername(event.target.value)}
               required
             />
             <Input
               type="email"
-              placeholder="Email"
+              placeholder={t("auth.emailPlaceholder")}
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               required
@@ -234,7 +240,7 @@ export function AuthForm({ mode }: AuthFormProps) {
         )}
         <Input
           type="password"
-          placeholder="Password"
+          placeholder={t("auth.passwordPlaceholder")}
           value={password}
           onChange={(event) => setPassword(event.target.value)}
           minLength={6}
@@ -246,12 +252,16 @@ export function AuthForm({ mode }: AuthFormProps) {
               href="/forgot-password"
               className="text-xs text-cyan-300 transition hover:text-cyan-200"
             >
-              Forgot password?
+              {t("auth.forgotPassword")}
             </Link>
           </div>
         ) : null}
         <Button onClick={submit} disabled={loading} className="w-full">
-          {loading ? "Processing..." : isLogin ? "Sign In" : "Create Account"}
+          {loading
+            ? t("common.processing")
+            : isLogin
+              ? t("auth.signInButton")
+              : t("auth.createAccountButton")}
         </Button>
         {error ? <p className="text-sm text-rose-300">{error}</p> : null}
       </div>

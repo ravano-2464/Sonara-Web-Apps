@@ -3,6 +3,7 @@
 import { createElement, useCallback, useState } from "react";
 import { toast } from "sonner";
 
+import { useI18n } from "@/components/providers/i18n-provider";
 import { AuthToastContent } from "@/features/auth/components/auth-toast-content";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 import { mapSupabaseErrorMessage } from "@/lib/supabase/error";
@@ -92,6 +93,7 @@ function inferAudioContentType(file: File): string | undefined {
 }
 
 export function useTrackUpload(userId: string | undefined) {
+  const { t } = useI18n();
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -132,9 +134,9 @@ export function useTrackUpload(userId: string | undefined) {
       coverFile,
     }: UploadPayload): Promise<UploadTrackResult> => {
       if (!userId) {
-        const message = "You must be signed in to upload tracks.";
+        const message = t("upload.userMustSignIn");
         showUploadToast({
-          title: "Upload Gagal",
+          title: t("upload.toastFailedTitle"),
           description: message,
           tone: "error",
         });
@@ -155,11 +157,10 @@ export function useTrackUpload(userId: string | undefined) {
         const audioPath = `${userId}/${timestamp}-${safeAudioName}`;
 
         if (!isSupportedAudioFile(audioFile)) {
-          const message =
-            "Unsupported audio format. Please upload MP3, WAV, OGG, M4A, or MP4.";
+          const message = t("upload.unsupportedFormat");
           setError(message);
           showUploadToast({
-            title: "Upload Gagal",
+            title: t("upload.toastFailedTitle"),
             description: message,
             tone: "error",
           });
@@ -184,7 +185,7 @@ export function useTrackUpload(userId: string | undefined) {
           const message = mapSupabaseErrorMessage(audioUploadError.message);
           setError(message);
           showUploadToast({
-            title: "Upload Gagal",
+            title: t("upload.toastFailedTitle"),
             description: message,
             tone: "error",
           });
@@ -216,7 +217,7 @@ export function useTrackUpload(userId: string | undefined) {
             const message = mapSupabaseErrorMessage(coverUploadError.message);
             setError(message);
             showUploadToast({
-              title: "Upload Gagal",
+              title: t("upload.toastFailedTitle"),
               description: message,
               tone: "error",
             });
@@ -249,7 +250,7 @@ export function useTrackUpload(userId: string | undefined) {
           const message = mapSupabaseErrorMessage(insertError.message);
           setError(message);
           showUploadToast({
-            title: "Upload Gagal",
+            title: t("upload.toastFailedTitle"),
             description: message,
             tone: "error",
           });
@@ -257,8 +258,8 @@ export function useTrackUpload(userId: string | undefined) {
         }
 
         showUploadToast({
-          title: "Upload Berhasil",
-          description: `${title} berhasil ditambahkan ke library.`,
+          title: t("upload.toastSuccessTitle"),
+          description: t("upload.successDescription", { title }),
           tone: "success",
         });
 
@@ -267,10 +268,10 @@ export function useTrackUpload(userId: string | undefined) {
         const message =
           caughtError instanceof Error
             ? mapSupabaseErrorMessage(caughtError.message)
-            : "Unexpected error while uploading track.";
+            : t("upload.unexpectedError");
         setError(message);
         showUploadToast({
-          title: "Upload Gagal",
+          title: t("upload.toastFailedTitle"),
           description: message,
           tone: "error",
         });
@@ -279,7 +280,7 @@ export function useTrackUpload(userId: string | undefined) {
         setUploading(false);
       }
     },
-    [showUploadToast, userId],
+    [showUploadToast, t, userId],
   );
 
   return {

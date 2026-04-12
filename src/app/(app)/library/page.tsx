@@ -9,10 +9,12 @@ import { useFavorites } from "@/features/favorites/hooks/use-favorites";
 import { TrackList } from "@/features/tracks/components/track-list";
 import { UploadTrackForm } from "@/features/tracks/components/upload-track-form";
 import { useTracks } from "@/features/tracks/hooks/use-tracks";
+import { useI18n } from "@/components/providers/i18n-provider";
 import { useSessionUser } from "@/hooks/use-session-user";
 import { usePlayerStore } from "@/stores/player-store";
 
 export default function LibraryPage() {
+  const { t } = useI18n();
   const { user } = useSessionUser();
   const { playTrack } = useAudioController();
 
@@ -38,8 +40,8 @@ export default function LibraryPage() {
   return (
     <div className="space-y-5">
       <PageHeader
-        title="Library"
-        description="Upload audio, search tracks, and curate your catalog."
+        title={t("library.title")}
+        description={t("library.description")}
       />
 
       <UploadTrackForm userId={user?.id} onUploaded={refetch} />
@@ -49,18 +51,18 @@ export default function LibraryPage() {
           <Input
             value={search}
             onChange={(event) => setSearch(event.target.value)}
-            placeholder="Search by title, artist, or album"
-            aria-label="Search tracks"
+            placeholder={t("library.searchPlaceholder")}
+            aria-label={t("library.searchAria")}
           />
           <select
             value={genre}
             onChange={(event) => setGenre(event.target.value)}
-            aria-label="Filter by genre"
+            aria-label={t("library.filterByGenreAria")}
             className="h-10 rounded-md border border-zinc-700 bg-zinc-950 px-3 text-sm text-zinc-100"
           >
             {genres.map((entry) => (
               <option key={entry} value={entry}>
-                {entry === "all" ? "All genres" : entry}
+                {entry === "all" ? t("library.allGenres") : entry}
               </option>
             ))}
           </select>
@@ -69,7 +71,7 @@ export default function LibraryPage() {
 
       {loading ? (
         <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-8 text-sm text-zinc-500">
-          Loading tracks...
+          {t("library.loadingTracks")}
         </div>
       ) : error ? (
         <div className="rounded-xl border border-rose-900 bg-rose-950/30 p-4 text-sm text-rose-300">
@@ -83,7 +85,7 @@ export default function LibraryPage() {
           favoriteTrackIds={favoriteTrackIds}
           onToggleFavorite={toggleFavorite}
           onPlayTrack={(track) => playTrack(track, tracks)}
-          emptyMessage="No tracks in library. Upload your first track above."
+          emptyMessage={t("library.emptyTracks")}
         />
       )}
     </div>

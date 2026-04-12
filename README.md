@@ -104,6 +104,7 @@ Sonara is an MVP-ready music player web app with:
 │   ├── 📁 components
 │   │   ├── 📁 layout
 │   │   │   ├── 📄 app-shell.tsx
+│   │   │   ├── 📄 language-toggle.tsx
 │   │   │   ├── 📄 logout-confirm-modal.tsx
 │   │   │   ├── 📄 page-header.tsx
 │   │   │   ├── 📄 session-panel.tsx
@@ -114,6 +115,7 @@ Sonara is an MVP-ready music player web app with:
 │   │   │   └── 📄 queue-panel.tsx
 │   │   ├── 📁 providers
 │   │   │   ├── 📄 app-providers.tsx
+│   │   │   ├── 📄 i18n-provider.tsx
 │   │   │   └── 📄 theme-provider.tsx
 │   │   └── 📁 ui
 │   │       ├── 📄 button.tsx
@@ -177,6 +179,7 @@ Sonara is an MVP-ready music player web app with:
 │   │   │   └── 📄 server.ts
 │   │   ├── 📄 client.ts
 │   │   ├── 📄 env.ts
+│   │   ├── 📄 i18n.ts
 │   │   ├── 📄 middleware.ts
 │   │   ├── 📄 server.ts
 │   │   └── 📄 utils.ts

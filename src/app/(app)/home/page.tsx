@@ -10,11 +10,13 @@ import { AlbumGrid } from "@/features/tracks/components/album-grid";
 import { TrackList } from "@/features/tracks/components/track-list";
 import { usePlaylists } from "@/features/playlists/hooks/use-playlists";
 import { useTracks } from "@/features/tracks/hooks/use-tracks";
+import { useI18n } from "@/components/providers/i18n-provider";
 import { useSessionUser } from "@/hooks/use-session-user";
 import { usePlayerStore } from "@/stores/player-store";
 import type { Track } from "@/types/models";
 
 export default function HomePage() {
+  const { t } = useI18n();
   const { user } = useSessionUser();
   const { playTrack } = useAudioController();
 
@@ -33,28 +35,30 @@ export default function HomePage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Home"
-        description="Discover your latest uploads, playlists, and listening activity."
+        title={t("home.title")}
+        description={t("home.description")}
       />
 
       <section className="rounded-2xl border border-zinc-800 bg-gradient-to-r from-zinc-900 via-zinc-900/70 to-cyan-950/40 p-5">
-        <p className="text-xs uppercase tracking-widest text-cyan-300">Now Building</p>
+        <p className="text-xs uppercase tracking-widest text-cyan-300">{t("home.nowBuilding")}</p>
         <h2 className="mt-2 text-2xl font-semibold text-zinc-50">
-          Real-time playback with waveform + 5-band EQ
+          {t("home.heroTitle")}
         </h2>
         <p className="mt-2 max-w-2xl text-sm text-zinc-300">
-          Use the persistent player bar to control queue, equalizer presets, shuffle/repeat,
-          and keyboard playback shortcuts.
+          {t("home.heroDescription")}
         </p>
       </section>
 
       <section>
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-400">
-          Your Playlists
+          {t("home.yourPlaylists")}
         </h2>
         {playlists.length === 0 ? (
           <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4 text-sm text-zinc-400">
-            No playlists yet. <Link href="/playlists" className="text-cyan-300">Create one</Link>
+            {t("home.noPlaylists")}{" "}
+            <Link href="/playlists" className="text-cyan-300">
+              {t("home.createOne")}
+            </Link>
           </div>
         ) : (
           <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
@@ -66,7 +70,7 @@ export default function HomePage() {
                 >
                   <p className="truncate font-medium">{playlist.name}</p>
                   <p className="mt-1 truncate text-xs text-zinc-500">
-                    {playlist.description ?? "No description"}
+                    {playlist.description ?? t("home.noDescription")}
                   </p>
                 </Link>
               </li>
@@ -80,11 +84,11 @@ export default function HomePage() {
       <section className="grid gap-4 lg:grid-cols-2">
         <div>
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-400">
-            Recently Played
+            {t("home.recentlyPlayed")}
           </h2>
           {recentItems.length === 0 ? (
             <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-4 text-sm text-zinc-400">
-              Nothing played yet.
+              {t("home.nothingPlayed")}
             </div>
           ) : (
             <ul className="divide-y divide-zinc-800 overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900/60">
@@ -106,11 +110,11 @@ export default function HomePage() {
 
         <div>
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-400">
-            Tracks
+            {t("home.tracks")}
           </h2>
           {loading ? (
             <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-8 text-sm text-zinc-500">
-              Loading tracks...
+              {t("home.loadingTracks")}
             </div>
           ) : error ? (
             <div className="rounded-xl border border-rose-900 bg-rose-950/30 p-4 text-sm text-rose-300">

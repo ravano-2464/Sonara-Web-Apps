@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
+import { useI18n } from "@/components/providers/i18n-provider";
 import { AuthToastContent } from "@/features/auth/components/auth-toast-content";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 
@@ -11,6 +12,7 @@ const LOGOUT_TOAST_DURATION_MS = 4200;
 
 export function useLogoutConfirm() {
   const router = useRouter();
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -49,7 +51,7 @@ export function useLogoutConfirm() {
 
     if (error) {
       showToast({
-        title: "Logout Gagal",
+        title: t("logout.failedTitle"),
         description: error.message,
         tone: "error",
       });
@@ -58,8 +60,8 @@ export function useLogoutConfirm() {
 
     setOpen(false);
     showToast({
-      title: "Logout Berhasil",
-      description: "Kamu telah keluar dari akun.",
+      title: t("logout.successTitle"),
+      description: t("logout.successDescription"),
       tone: "success",
     });
     router.push("/auth/login");

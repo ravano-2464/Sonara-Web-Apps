@@ -13,6 +13,7 @@ import {
   Volume2,
 } from "lucide-react";
 
+import { useI18n } from "@/components/providers/i18n-provider";
 import { QueuePanel } from "@/components/player/queue-panel";
 import { AudioVisualizer } from "@/features/audio/components/audio-visualizer";
 import { EqualizerPanel } from "@/features/audio/components/equalizer-panel";
@@ -22,6 +23,7 @@ import { cn, formatDuration } from "@/lib/utils";
 import { usePlayerStore } from "@/stores/player-store";
 
 export function PlayerBar() {
+  const { t } = useI18n();
   const [showEqualizer, setShowEqualizer] = useState(false);
 
   const activeTrack = usePlayerStore((state) => state.activeTrack);
@@ -45,21 +47,21 @@ export function PlayerBar() {
 
   const repeatLabel = useMemo(() => {
     if (repeatMode === "off") {
-      return "Repeat off";
+      return t("player.repeatOff");
     }
 
     if (repeatMode === "all") {
-      return "Repeat all";
+      return t("player.repeatAll");
     }
 
-    return "Repeat one";
-  }, [repeatMode]);
+    return t("player.repeatOne");
+  }, [repeatMode, t]);
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-40 border-t border-zinc-800 bg-zinc-950/95 backdrop-blur">
       {showEqualizer || isQueueOpen ? (
         <div className="grid gap-3 border-b border-zinc-800 px-3 py-3 md:grid-cols-2 md:px-6">
-          {showEqualizer ? <EqualizerPanel /> : null}
+          {showEqualizer ? <EqualizerPanel onClose={() => setShowEqualizer(false)} /> : null}
           {isQueueOpen ? (
             <QueuePanel
               queue={queue}
@@ -88,7 +90,7 @@ export function PlayerBar() {
 
           <div className="min-w-0">
             <p className="truncate text-sm font-medium text-zinc-100">
-              {activeTrack?.title ?? "No track selected"}
+              {activeTrack?.title ?? t("player.noTrackSelected")}
             </p>
             <p className="truncate text-xs text-zinc-400">{activeTrack?.artist ?? "-"}</p>
           </div>
@@ -98,7 +100,7 @@ export function PlayerBar() {
           <div className="flex items-center justify-center gap-2">
             <button
               type="button"
-              aria-label="Toggle shuffle"
+              aria-label={t("player.toggleShuffle")}
               onClick={toggleShuffle}
               className={cn(
                 "inline-flex h-8 w-8 items-center justify-center rounded-full",
@@ -112,7 +114,7 @@ export function PlayerBar() {
             <button
               type="button"
               onClick={playPrevious}
-              aria-label="Previous track"
+              aria-label={t("player.previousTrack")}
               className="inline-flex h-8 w-8 items-center justify-center rounded-full text-zinc-300 hover:bg-zinc-800"
             >
               <SkipBack className="h-4 w-4" />
@@ -120,7 +122,7 @@ export function PlayerBar() {
             <button
               type="button"
               onClick={togglePlayPause}
-              aria-label={isPlaying ? "Pause" : "Play"}
+              aria-label={isPlaying ? t("player.pause") : t("player.play")}
               className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-cyan-400 text-zinc-950 hover:bg-cyan-300"
             >
               {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
@@ -128,7 +130,7 @@ export function PlayerBar() {
             <button
               type="button"
               onClick={playNext}
-              aria-label="Next track"
+              aria-label={t("player.nextTrack")}
               className="inline-flex h-8 w-8 items-center justify-center rounded-full text-zinc-300 hover:bg-zinc-800"
             >
               <SkipForward className="h-4 w-4" />
@@ -161,7 +163,7 @@ export function PlayerBar() {
               value={Math.min(currentTime, duration || 0)}
               onChange={(event) => seekTo(Number(event.target.value))}
               className="h-2 w-full cursor-pointer appearance-none rounded-full bg-zinc-700 accent-cyan-400"
-              aria-label="Seek"
+              aria-label={t("player.seek")}
             />
             <span className="w-10 text-xs text-zinc-500">{formatDuration(duration)}</span>
           </div>
@@ -177,7 +179,7 @@ export function PlayerBar() {
           <button
             type="button"
             onClick={() => setShowEqualizer((value) => !value)}
-            aria-label="Toggle equalizer"
+            aria-label={t("player.toggleEqualizer")}
             className={cn(
               "inline-flex h-8 w-8 items-center justify-center rounded-full",
               showEqualizer ? "text-cyan-300" : "text-zinc-500 hover:text-zinc-200",
@@ -188,7 +190,7 @@ export function PlayerBar() {
           <button
             type="button"
             onClick={toggleQueue}
-            aria-label="Toggle queue"
+            aria-label={t("player.toggleQueue")}
             className={cn(
               "inline-flex h-8 w-8 items-center justify-center rounded-full",
               isQueueOpen ? "text-cyan-300" : "text-zinc-500 hover:text-zinc-200",
@@ -204,7 +206,7 @@ export function PlayerBar() {
             step={0.01}
             value={volume}
             onChange={(event) => setVolume(Number(event.target.value))}
-            aria-label="Volume"
+            aria-label={t("player.volume")}
             className="h-2 w-24 cursor-pointer appearance-none rounded-full bg-zinc-700 accent-cyan-400"
           />
         </div>

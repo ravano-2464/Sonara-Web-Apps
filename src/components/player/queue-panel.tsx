@@ -2,6 +2,7 @@
 
 import { Music2 } from "lucide-react";
 
+import { useI18n } from "@/components/providers/i18n-provider";
 import { cn } from "@/lib/utils";
 import type { Track } from "@/types/models";
 
@@ -12,16 +13,20 @@ interface QueuePanelProps {
 }
 
 export function QueuePanel({ queue, currentIndex, onSelectIndex }: QueuePanelProps) {
+  const { t } = useI18n();
+
   return (
     <section className="rounded-xl border border-zinc-800 bg-zinc-900/70 p-4">
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-sm font-semibold text-zinc-100">Queue</h2>
-        <span className="text-xs text-zinc-500">{queue.length} tracks</span>
+        <h2 className="text-sm font-semibold text-zinc-100">{t("queue.title")}</h2>
+        <span className="text-xs text-zinc-500">
+          {t("queue.trackCount", { count: queue.length })}
+        </span>
       </div>
 
       {queue.length === 0 ? (
         <p className="rounded-lg border border-zinc-800 bg-zinc-950/70 p-4 text-xs text-zinc-500">
-          Your queue is empty.
+          {t("queue.empty")}
         </p>
       ) : (
         <ul className="sonara-scrollbar max-h-48 space-y-1 overflow-y-auto pr-1">

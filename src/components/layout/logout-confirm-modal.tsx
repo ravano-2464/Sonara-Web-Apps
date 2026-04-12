@@ -2,6 +2,7 @@
 
 import { AlertTriangle, Loader2, X } from "lucide-react";
 
+import { useI18n } from "@/components/providers/i18n-provider";
 import { Button } from "@/components/ui/button";
 
 interface LogoutConfirmModalProps {
@@ -17,6 +18,8 @@ export function LogoutConfirmModal({
   onCancel,
   onConfirm,
 }: LogoutConfirmModalProps) {
+  const { t } = useI18n();
+
   return (
     <div
       className={`fixed inset-0 z-[70] flex items-center justify-center px-4 backdrop-blur-sm transition-opacity duration-200 ease-out ${
@@ -42,31 +45,31 @@ export function LogoutConfirmModal({
             onClick={onCancel}
             disabled={loading}
             className="inline-flex size-7 items-center justify-center rounded-md border border-zinc-700 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-200 disabled:opacity-50"
-            aria-label="Close logout confirmation"
+            aria-label={t("logout.closeAria")}
           >
             <X className="size-4" />
           </button>
         </div>
 
         <h2 id="logout-confirm-title" className="mt-3 text-base font-semibold text-zinc-100">
-          Confirm Logout
+          {t("logout.confirmTitle")}
         </h2>
         <p id="logout-confirm-description" className="mt-1 text-sm text-zinc-400">
-          Kamu yakin ingin logout dari akun ini?
+          {t("logout.confirmDescription")}
         </p>
 
         <div className="mt-5 flex items-center justify-end gap-2">
           <Button variant="ghost" onClick={onCancel} disabled={loading}>
-            Batal
+            {t("common.cancel")}
           </Button>
           <Button variant="destructive" onClick={onConfirm} disabled={loading}>
             {loading ? (
               <span className="inline-flex items-center gap-1.5">
                 <Loader2 className="size-4 animate-spin" />
-                Logging out...
+                {t("logout.loggingOut")}
               </span>
             ) : (
-              "Ya, Logout"
+              t("logout.confirmButton")
             )}
           </Button>
         </div>

@@ -2,6 +2,7 @@
 
 import { Clock3 } from "lucide-react";
 
+import { useI18n } from "@/components/providers/i18n-provider";
 import { formatDuration, formatRelativeDate } from "@/lib/utils";
 import type { RecentlyPlayedWithTrack } from "@/features/history/hooks/use-recently-played";
 
@@ -11,10 +12,12 @@ interface RecentlyPlayedListProps {
 }
 
 export function RecentlyPlayedList({ items, onPlay }: RecentlyPlayedListProps) {
+  const { t } = useI18n();
+
   if (items.length === 0) {
     return (
       <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-8 text-center text-sm text-zinc-400">
-        Nothing played recently.
+        {t("recentlyPlayedList.empty")}
       </div>
     );
   }

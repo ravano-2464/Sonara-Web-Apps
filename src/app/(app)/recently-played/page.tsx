@@ -1,12 +1,14 @@
 "use client";
 
 import { PageHeader } from "@/components/layout/page-header";
+import { useI18n } from "@/components/providers/i18n-provider";
 import { useAudioController } from "@/features/audio/components/audio-runtime-provider";
 import { RecentlyPlayedList } from "@/features/history/components/recently-played-list";
 import { useRecentlyPlayed } from "@/features/history/hooks/use-recently-played";
 import { useSessionUser } from "@/hooks/use-session-user";
 
 export default function RecentlyPlayedPage() {
+  const { t } = useI18n();
   const { user } = useSessionUser();
   const { playTrack } = useAudioController();
 
@@ -17,13 +19,13 @@ export default function RecentlyPlayedPage() {
   return (
     <div className="space-y-5">
       <PageHeader
-        title="Recently Played"
-        description="Playback history synced from your listening sessions."
+        title={t("recentlyPlayed.title")}
+        description={t("recentlyPlayed.description")}
       />
 
       {loading ? (
         <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-8 text-sm text-zinc-500">
-          Loading playback history...
+          {t("recentlyPlayed.loading")}
         </div>
       ) : error ? (
         <div className="rounded-xl border border-rose-900 bg-rose-950/30 p-4 text-sm text-rose-300">

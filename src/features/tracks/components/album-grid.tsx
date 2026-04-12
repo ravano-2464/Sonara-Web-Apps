@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/components/providers/i18n-provider";
 import type { Track } from "@/types/models";
 
 interface AlbumGridProps {
@@ -19,7 +20,7 @@ function buildAlbumCards(tracks: Track[]): AlbumCardModel[] {
   const map = new Map<string, AlbumCardModel>();
 
   tracks.forEach((track) => {
-    const albumName = track.album?.trim() || "Singles";
+    const albumName = track.album?.trim() || "__SINGLES__";
     const key = `${albumName}::${track.artist}`;
 
     const existing = map.get(key);
@@ -42,6 +43,7 @@ function buildAlbumCards(tracks: Track[]): AlbumCardModel[] {
 }
 
 export function AlbumGrid({ tracks, onSelectTrack }: AlbumGridProps) {
+  const { t } = useI18n();
   const albums = buildAlbumCards(tracks).slice(0, 8);
 
   if (albums.length === 0) {
@@ -51,7 +53,7 @@ export function AlbumGrid({ tracks, onSelectTrack }: AlbumGridProps) {
   return (
     <section className="space-y-3">
       <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-400">
-        Albums
+        {t("albums.title")}
       </h2>
       <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
         {albums.map((album) => (
@@ -72,9 +74,13 @@ export function AlbumGrid({ tracks, onSelectTrack }: AlbumGridProps) {
                 <div className="aspect-square w-full bg-gradient-to-br from-zinc-800 to-zinc-950" />
               )}
               <div className="p-3">
-                <p className="truncate text-sm font-medium text-zinc-100">{album.album}</p>
+                <p className="truncate text-sm font-medium text-zinc-100">
+                  {album.album === "__SINGLES__" ? t("albums.singles") : album.album}
+                </p>
                 <p className="truncate text-xs text-zinc-400">{album.artist}</p>
-                <p className="mt-1 text-[11px] text-zinc-500">{album.tracksCount} tracks</p>
+                <p className="mt-1 text-[11px] text-zinc-500">
+                  {t("albums.tracksCount", { count: album.tracksCount })}
+                </p>
               </div>
             </button>
           </li>

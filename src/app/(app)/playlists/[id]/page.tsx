@@ -3,6 +3,7 @@
 import { useParams } from "next/navigation";
 
 import { PageHeader } from "@/components/layout/page-header";
+import { useI18n } from "@/components/providers/i18n-provider";
 import { useAudioController } from "@/features/audio/components/audio-runtime-provider";
 import { useFavorites } from "@/features/favorites/hooks/use-favorites";
 import { PlaylistDetailManager } from "@/features/playlists/components/playlist-detail-manager";
@@ -12,6 +13,7 @@ import { useSessionUser } from "@/hooks/use-session-user";
 import { usePlayerStore } from "@/stores/player-store";
 
 export default function PlaylistDetailPage() {
+  const { t } = useI18n();
   const params = useParams<{ id: string }>();
   const playlistId = params.id;
 
@@ -39,13 +41,13 @@ export default function PlaylistDetailPage() {
   return (
     <div className="space-y-5">
       <PageHeader
-        title="Playlist Detail"
-        description="Manage metadata, add tracks, and edit queue composition."
+        title={t("playlistDetail.title")}
+        description={t("playlistDetail.description")}
       />
 
       {loading ? (
         <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-8 text-sm text-zinc-500">
-          Loading playlist...
+          {t("playlistDetail.loading")}
         </div>
       ) : error ? (
         <div className="rounded-xl border border-rose-900 bg-rose-950/30 p-4 text-sm text-rose-300">
@@ -68,7 +70,7 @@ export default function PlaylistDetailPage() {
         />
       ) : (
         <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-8 text-sm text-zinc-400">
-          Playlist not found.
+          {t("playlistDetail.notFound")}
         </div>
       )}
     </div>

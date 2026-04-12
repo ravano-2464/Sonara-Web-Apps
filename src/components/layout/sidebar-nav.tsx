@@ -13,16 +13,17 @@ import {
 } from "lucide-react";
 
 import { LogoutConfirmModal } from "@/components/layout/logout-confirm-modal";
+import { useI18n } from "@/components/providers/i18n-provider";
 import { useLogoutConfirm } from "@/hooks/use-logout-confirm";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { href: "/home", label: "Home", icon: Home },
-  { href: "/library", label: "Library", icon: Library },
-  { href: "/playlists", label: "Playlists", icon: ListMusic },
-  { href: "/favorites", label: "Favorites", icon: Heart },
-  { href: "/recently-played", label: "Recently Played", icon: Clock3 },
-];
+  { href: "/home", labelKey: "nav.home", icon: Home },
+  { href: "/library", labelKey: "nav.library", icon: Library },
+  { href: "/playlists", labelKey: "nav.playlists", icon: ListMusic },
+  { href: "/favorites", labelKey: "nav.favorites", icon: Heart },
+  { href: "/recently-played", labelKey: "nav.recentlyPlayed", icon: Clock3 },
+] as const;
 
 interface SidebarNavProps {
   username?: string;
@@ -31,6 +32,7 @@ interface SidebarNavProps {
 
 export function SidebarNav({ username, desktopOpen }: SidebarNavProps) {
   const pathname = usePathname();
+  const { t } = useI18n();
   const { open, setOpen, loading, confirmLogout } = useLogoutConfirm();
 
   return (
@@ -50,7 +52,7 @@ export function SidebarNav({ username, desktopOpen }: SidebarNavProps) {
           </span>
           <div>
             <p className="text-sm font-semibold text-zinc-100">Sonara</p>
-            <p className="text-xs text-zinc-500">Premium Audio Lab</p>
+            <p className="text-xs text-zinc-500">{t("brand.tagline")}</p>
           </div>
         </div>
 
@@ -69,23 +71,23 @@ export function SidebarNav({ username, desktopOpen }: SidebarNavProps) {
                     ? "bg-cyan-400/15 text-cyan-300"
                     : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100",
                 )}
-              >
+                >
                 <Icon className="h-4 w-4" />
-                <span>{item.label}</span>
+                <span>{t(item.labelKey)}</span>
               </Link>
             );
           })}
         </nav>
 
         <div className="mt-auto space-y-2 border-t border-zinc-800 pt-4">
-          <p className="truncate text-xs text-zinc-500">{username ?? "Signed in"}</p>
+          <p className="truncate text-xs text-zinc-500">{username ?? t("common.signedIn")}</p>
           <button
             type="button"
             onClick={() => setOpen(true)}
             className="flex h-9 w-full items-center gap-2 rounded-md px-3 text-sm text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100"
           >
             <LogOut className="h-4 w-4" />
-            Logout
+            {t("common.logout")}
           </button>
         </div>
       </aside>
@@ -106,20 +108,20 @@ export function SidebarNav({ username, desktopOpen }: SidebarNavProps) {
                     : "border border-zinc-800 bg-zinc-900 text-zinc-300",
                 )}
               >
-                {item.label}
+                {t(item.labelKey)}
               </Link>
             );
           })}
         </div>
         <div className="mt-2 flex items-center justify-between gap-2 rounded-lg border border-zinc-800 bg-zinc-900/70 px-3 py-2">
-          <p className="truncate text-xs text-zinc-400">{username ?? "Signed in"}</p>
+          <p className="truncate text-xs text-zinc-400">{username ?? t("common.signedIn")}</p>
           <button
             type="button"
             onClick={() => setOpen(true)}
             className="inline-flex h-7 items-center gap-1 rounded-md border border-zinc-700 px-2 text-xs text-zinc-300 hover:bg-zinc-800"
           >
             <LogOut className="h-3.5 w-3.5" />
-            Logout
+            {t("common.logout")}
           </button>
         </div>
       </div>

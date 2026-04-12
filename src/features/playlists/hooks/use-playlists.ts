@@ -3,6 +3,7 @@
 import { createElement, useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 
+import { useI18n } from "@/components/providers/i18n-provider";
 import { AuthToastContent } from "@/features/auth/components/auth-toast-content";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 import { mapSupabaseErrorMessage } from "@/lib/supabase/error";
@@ -11,6 +12,7 @@ import type { Playlist } from "@/types/models";
 const PLAYLIST_TOAST_DURATION_MS = 5000;
 
 export function usePlaylists(userId: string | undefined) {
+  const { t } = useI18n();
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -83,9 +85,9 @@ export function usePlaylists(userId: string | undefined) {
   const createPlaylist = useCallback(
     async (name: string, description: string) => {
       if (!userId) {
-        const message = "User not found.";
+        const message = t("playlist.userNotFound");
         showPlaylistToast({
-          title: "Playlist Gagal",
+          title: t("playlist.toastFailedTitle"),
           description: message,
           tone: "error",
         });
@@ -102,7 +104,7 @@ export function usePlaylists(userId: string | undefined) {
       if (insertError) {
         const message = mapSupabaseErrorMessage(insertError.message);
         showPlaylistToast({
-          title: "Playlist Gagal",
+          title: t("playlist.toastFailedTitle"),
           description: message,
           tone: "error",
         });
@@ -111,13 +113,13 @@ export function usePlaylists(userId: string | undefined) {
 
       await fetchPlaylists();
       showPlaylistToast({
-        title: "Playlist Berhasil",
-        description: `${name} berhasil dibuat.`,
+        title: t("playlist.toastSuccessTitle"),
+        description: t("playlist.createdDescription", { name }),
         tone: "success",
       });
       return { error: null };
     },
-    [fetchPlaylists, showPlaylistToast, userId],
+    [fetchPlaylists, showPlaylistToast, t, userId],
   );
 
   return {

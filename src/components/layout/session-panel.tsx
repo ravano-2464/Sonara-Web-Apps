@@ -2,8 +2,10 @@
 
 import { LogOut, Menu, User2 } from "lucide-react";
 
+import { LanguageToggle } from "@/components/layout/language-toggle";
 import { LogoutConfirmModal } from "@/components/layout/logout-confirm-modal";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { useI18n } from "@/components/providers/i18n-provider";
 import { useLogoutConfirm } from "@/hooks/use-logout-confirm";
 
 interface SessionPanelProps {
@@ -17,6 +19,7 @@ export function SessionPanel({
   sidebarOpen,
   onToggleSidebar,
 }: SessionPanelProps) {
+  const { t } = useI18n();
   const { open, setOpen, loading, confirmLogout } = useLogoutConfirm();
 
   return (
@@ -25,18 +28,19 @@ export function SessionPanel({
         <button
           type="button"
           onClick={onToggleSidebar}
-          aria-label={sidebarOpen ? "Close sidebar" : "Open sidebar"}
+          aria-label={sidebarOpen ? t("session.closeSidebar") : t("session.openSidebar")}
           className="hidden h-8 items-center gap-1.5 rounded-lg border border-zinc-700 bg-zinc-900 px-2.5 text-xs text-zinc-200 hover:bg-zinc-800 md:inline-flex"
         >
           <Menu className="h-3.5 w-3.5" />
-          {sidebarOpen ? "Hide Sidebar" : "Show Sidebar"}
+          {sidebarOpen ? t("session.hideSidebar") : t("session.showSidebar")}
         </button>
 
         <div className="ml-auto flex items-center gap-2">
+          <LanguageToggle />
           <ThemeToggle />
           <div className="inline-flex items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-900/70 px-3 py-2 text-xs text-zinc-300">
             <User2 className="h-3.5 w-3.5 text-zinc-500" />
-            <span className="max-w-48 truncate">{username ?? "Signed in"}</span>
+            <span className="max-w-48 truncate">{username ?? t("common.signedIn")}</span>
           </div>
           <button
             type="button"
@@ -44,7 +48,7 @@ export function SessionPanel({
             className="inline-flex h-8 items-center gap-1 rounded-lg border border-zinc-700 bg-zinc-900 px-2.5 text-xs text-zinc-200 hover:bg-zinc-800"
           >
             <LogOut className="h-3.5 w-3.5" />
-            Logout
+            {t("common.logout")}
           </button>
         </div>
       </div>

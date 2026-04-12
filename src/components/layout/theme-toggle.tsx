@@ -4,8 +4,11 @@ import { useMemo, useSyncExternalStore } from "react";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
+import { useI18n } from "@/components/providers/i18n-provider";
+
 export function ThemeToggle() {
   const { theme, resolvedTheme, setTheme } = useTheme();
+  const { t } = useI18n();
   const mounted = useSyncExternalStore(
     () => () => {},
     () => true,
@@ -28,11 +31,11 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      aria-label={isDark ? t("theme.switchToLight") : t("theme.switchToDark")}
       className="inline-flex h-8 items-center gap-1 rounded-lg border border-zinc-700 bg-zinc-900 px-2.5 text-xs text-zinc-200 hover:bg-zinc-800"
     >
       {isDark ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
-      {isDark ? "Light" : "Dark"}
+      {isDark ? t("theme.light") : t("theme.dark")}
     </button>
   );
 }

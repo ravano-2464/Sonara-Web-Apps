@@ -3,6 +3,7 @@
 import { Heart, Pause, Play } from "lucide-react";
 import type { ReactNode } from "react";
 
+import { useI18n } from "@/components/providers/i18n-provider";
 import { formatDuration } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import type { Track } from "@/types/models";
@@ -25,13 +26,16 @@ export function TrackList({
   favoriteTrackIds,
   onPlayTrack,
   onToggleFavorite,
-  emptyMessage = "No tracks found.",
+  emptyMessage,
   actionSlot,
 }: TrackListProps) {
+  const { t } = useI18n();
+  const resolvedEmptyMessage = emptyMessage ?? t("trackList.emptyDefault");
+
   if (tracks.length === 0) {
     return (
       <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-8 text-center text-sm text-zinc-400">
-        {emptyMessage}
+        {resolvedEmptyMessage}
       </div>
     );
   }
@@ -55,7 +59,7 @@ export function TrackList({
                 type="button"
                 onClick={() => onPlayTrack(track, index)}
                 className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-zinc-700 bg-zinc-950 text-zinc-200 hover:border-cyan-400 hover:text-cyan-300"
-                aria-label={isActive && isPlaying ? "Pause track" : "Play track"}
+                aria-label={isActive && isPlaying ? t("trackList.pauseTrack") : t("trackList.playTrack")}
               >
                 {isActive && isPlaying ? (
                   <Pause className="h-4 w-4" />
@@ -69,7 +73,9 @@ export function TrackList({
                 <p className="truncate text-xs text-zinc-400">{track.artist}</p>
               </div>
 
-              <p className="hidden truncate text-xs text-zinc-400 sm:block">{track.album ?? "Single"}</p>
+              <p className="hidden truncate text-xs text-zinc-400 sm:block">
+                {track.album ?? t("trackList.single")}
+              </p>
               <p className="hidden text-xs text-zinc-500 sm:block">{formatDuration(track.duration)}</p>
 
               <div className="flex items-center gap-1">
@@ -77,7 +83,7 @@ export function TrackList({
                   <button
                     type="button"
                     onClick={() => onToggleFavorite(track.id)}
-                    aria-label={isFav ? "Remove from favorites" : "Add to favorites"}
+                    aria-label={isFav ? t("trackList.removeFavorite") : t("trackList.addFavorite")}
                     className={cn(
                       "inline-flex h-8 w-8 items-center justify-center rounded-full",
                       isFav
