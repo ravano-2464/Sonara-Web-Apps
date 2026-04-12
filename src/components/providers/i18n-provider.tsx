@@ -6,7 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useState,
+  useSyncExternalStore,
 } from "react";
 
 import {
@@ -26,6 +26,36 @@ interface I18nContextValue {
 }
 
 const LANGUAGE_STORAGE_KEY = "sonara-language";
+const LANGUAGE_CHANGE_EVENT = "sonara-language-change";
+
+function readStoredLocale(): Locale {
+  if (typeof window === "undefined") {
+    return DEFAULT_LOCALE;
+  }
+
+  try {
+    const stored = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
+    return stored && isSupportedLocale(stored) ? stored : DEFAULT_LOCALE;
+  } catch {
+    return DEFAULT_LOCALE;
+  }
+}
+
+function subscribeToLocaleChanges(callback: () => void) {
+  if (typeof window === "undefined") {
+    return () => {};
+  }
+
+  const handleChange = () => callback();
+
+  window.addEventListener("storage", handleChange);
+  window.addEventListener(LANGUAGE_CHANGE_EVENT, handleChange);
+
+  return () => {
+    window.removeEventListener("storage", handleChange);
+    window.removeEventListener(LANGUAGE_CHANGE_EVENT, handleChange);
+  };
+}
 
 const I18nContext = createContext<I18nContextValue | null>(null);
 
@@ -34,36 +64,29 @@ interface I18nProviderProps {
 }
 
 export function I18nProvider({ children }: I18nProviderProps) {
-  const [locale, setLocaleState] = useState<Locale>(() => {
-    if (typeof window === "undefined") {
-      return DEFAULT_LOCALE;
-    }
+  const locale = useSyncExternalStore(
+    subscribeToLocaleChanges,
+    readStoredLocale,
+    () => DEFAULT_LOCALE,
+  );
 
+  const setLocale = useCallback((nextLocale: Locale) => {
     try {
-      const stored = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
-      return stored && isSupportedLocale(stored) ? stored : DEFAULT_LOCALE;
-    } catch {
-      return DEFAULT_LOCALE;
-    }
-  });
-
-  useEffect(() => {
-    try {
-      window.localStorage.setItem(LANGUAGE_STORAGE_KEY, locale);
+      window.localStorage.setItem(LANGUAGE_STORAGE_KEY, nextLocale);
     } catch {
       // Ignore browser storage errors.
     }
 
-    document.documentElement.lang = locale;
-  }, [locale]);
-
-  const setLocale = useCallback((nextLocale: Locale) => {
-    setLocaleState(nextLocale);
+    window.dispatchEvent(new Event(LANGUAGE_CHANGE_EVENT));
   }, []);
 
   const toggleLocale = useCallback(() => {
-    setLocaleState((current) => (current === "en" ? "id" : "en"));
-  }, []);
+    setLocale(locale === "en" ? "id" : "en");
+  }, [locale, setLocale]);
+
+  useEffect(() => {
+    document.documentElement.lang = locale;
+  }, [locale]);
 
   const t = useCallback(
     (key: TranslationKey, params?: TranslationParams) => translate(locale, key, params),
