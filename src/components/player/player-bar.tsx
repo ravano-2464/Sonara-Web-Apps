@@ -67,6 +67,7 @@ export function PlayerBar() {
               queue={queue}
               currentIndex={currentIndex}
               onSelectIndex={playTrackAtIndex}
+              onClose={toggleQueue}
             />
           ) : null}
           <div className={cn("md:col-span-2", !showEqualizer && !isQueueOpen ? "hidden" : "") }>

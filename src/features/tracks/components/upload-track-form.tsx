@@ -6,6 +6,7 @@ import { ImageUp, Music2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/components/providers/i18n-provider";
 import { Input } from "@/components/ui/input";
+import { extractAudioFileMetadata } from "@/features/tracks/lib/audio-file-metadata";
 import { useTrackUpload } from "@/features/tracks/hooks/use-track-upload";
 
 interface UploadTrackFormProps {
@@ -23,8 +24,15 @@ export function UploadTrackForm({ userId, onUploaded }: UploadTrackFormProps) {
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreviewUrl, setCoverPreviewUrl] = useState<string | null>(null);
   const [uploadedCoverUrl, setUploadedCoverUrl] = useState<string | null>(null);
+  const [metadataDetected, setMetadataDetected] = useState(false);
+  const [embeddedCoverDetected, setEmbeddedCoverDetected] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const coverPreviewRef = useRef<string | null>(null);
+  const metadataRequestRef = useRef(0);
+  const titleTouchedRef = useRef(false);
+  const artistTouchedRef = useRef(false);
+  const manualCoverSelectedRef = useRef(false);
+  const embeddedCoverActiveRef = useRef(false);
 
   const { uploading, error, uploadTrack } = useTrackUpload(userId);
 
@@ -36,6 +44,22 @@ export function UploadTrackForm({ userId, onUploaded }: UploadTrackFormProps) {
       }
     };
   }, []);
+
+  const setCoverPreviewFromFile = (file: File | null) => {
+    if (coverPreviewRef.current) {
+      URL.revokeObjectURL(coverPreviewRef.current);
+      coverPreviewRef.current = null;
+    }
+
+    if (!file) {
+      setCoverPreviewUrl(null);
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(file);
+    coverPreviewRef.current = objectUrl;
+    setCoverPreviewUrl(objectUrl);
+  };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -67,6 +91,13 @@ export function UploadTrackForm({ userId, onUploaded }: UploadTrackFormProps) {
     setGenre("");
     setAudioFile(null);
     setCoverFile(null);
+    setCoverPreviewFromFile(null);
+    setMetadataDetected(false);
+    setEmbeddedCoverDetected(false);
+    titleTouchedRef.current = false;
+    artistTouchedRef.current = false;
+    manualCoverSelectedRef.current = false;
+    embeddedCoverActiveRef.current = false;
     onUploaded();
   };
 
@@ -86,14 +117,20 @@ export function UploadTrackForm({ userId, onUploaded }: UploadTrackFormProps) {
         <Input
           required
           value={title}
-          onChange={(event) => setTitle(event.target.value)}
+          onChange={(event) => {
+            titleTouchedRef.current = true;
+            setTitle(event.target.value);
+          }}
           placeholder={t("upload.trackTitle")}
           aria-label={t("upload.trackTitle")}
         />
         <Input
           required
           value={artist}
-          onChange={(event) => setArtist(event.target.value)}
+          onChange={(event) => {
+            artistTouchedRef.current = true;
+            setArtist(event.target.value);
+          }}
           placeholder={t("upload.artist")}
           aria-label={t("upload.artist")}
         />
@@ -119,9 +156,62 @@ export function UploadTrackForm({ userId, onUploaded }: UploadTrackFormProps) {
             accept=".mp3,.wav,.ogg,.m4a,.mp4,audio/mpeg,audio/wav,audio/ogg,audio/mp4,video/mp4"
             required
             className="sr-only"
-            onChange={(event) => {
+            onChange={async (event) => {
               const file = event.target.files?.[0] ?? null;
               setAudioFile(file);
+              setUploadedCoverUrl(null);
+              setMessage(null);
+              setMetadataDetected(false);
+
+              if (!file) {
+                if (embeddedCoverActiveRef.current && !manualCoverSelectedRef.current) {
+                  setCoverFile(null);
+                  setCoverPreviewFromFile(null);
+                  setEmbeddedCoverDetected(false);
+                  embeddedCoverActiveRef.current = false;
+                }
+                return;
+              }
+
+              titleTouchedRef.current = false;
+              artistTouchedRef.current = false;
+
+              const requestId = metadataRequestRef.current + 1;
+              metadataRequestRef.current = requestId;
+
+              const metadata = await extractAudioFileMetadata(file);
+
+              if (metadataRequestRef.current !== requestId) {
+                return;
+              }
+
+              let hasDetectedText = false;
+
+              if (!titleTouchedRef.current) {
+                setTitle(metadata.title ?? "");
+                hasDetectedText = hasDetectedText || Boolean(metadata.title);
+              }
+
+              if (!artistTouchedRef.current) {
+                setArtist(metadata.artist ?? "");
+                hasDetectedText = hasDetectedText || Boolean(metadata.artist);
+              }
+
+              setMetadataDetected(hasDetectedText);
+
+              if (!manualCoverSelectedRef.current) {
+                if (metadata.coverFile) {
+                  setCoverFile(metadata.coverFile);
+                  setCoverPreviewFromFile(metadata.coverFile);
+                  setEmbeddedCoverDetected(true);
+                  embeddedCoverActiveRef.current = true;
+                } else if (embeddedCoverActiveRef.current) {
+                  setCoverFile(null);
+                  setCoverPreviewFromFile(null);
+                  setEmbeddedCoverDetected(false);
+                  embeddedCoverActiveRef.current = false;
+                }
+              }
             }}
           />
           <label
@@ -144,20 +234,12 @@ export function UploadTrackForm({ userId, onUploaded }: UploadTrackFormProps) {
             className="sr-only"
             onChange={(event) => {
               const file = event.target.files?.[0] ?? null;
-              if (coverPreviewRef.current) {
-                URL.revokeObjectURL(coverPreviewRef.current);
-                coverPreviewRef.current = null;
-              }
-
-              if (file) {
-                const objectUrl = URL.createObjectURL(file);
-                coverPreviewRef.current = objectUrl;
-                setCoverPreviewUrl(objectUrl);
-              } else {
-                setCoverPreviewUrl(null);
-              }
-
+              setUploadedCoverUrl(null);
+              manualCoverSelectedRef.current = Boolean(file);
+              embeddedCoverActiveRef.current = false;
+              setEmbeddedCoverDetected(false);
               setCoverFile(file);
+              setCoverPreviewFromFile(file);
             }}
           />
           <label
@@ -172,6 +254,13 @@ export function UploadTrackForm({ userId, onUploaded }: UploadTrackFormProps) {
           </label>
         </div>
       </div>
+
+      {metadataDetected ? (
+        <p className="mt-3 text-xs text-cyan-300">{t("upload.metadataDetectedHint")}</p>
+      ) : null}
+      {embeddedCoverDetected ? (
+        <p className="mt-1 text-xs text-emerald-300">{t("upload.embeddedCoverHint")}</p>
+      ) : null}
 
       {effectiveCoverPreview ? (
         <div className="mt-4 flex flex-col items-center rounded-lg border border-zinc-800 bg-zinc-950/70 p-3">

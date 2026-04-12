@@ -116,6 +116,10 @@ const EN_TRANSLATIONS = {
   "upload.clickSelectCover": "Click to select cover",
   "upload.coverPreview": "Cover preview",
   "upload.coverSaved": "Cover saved successfully.",
+  "upload.metadataDetectedHint":
+    "Metadata detected from the audio file. You can edit title and artist if needed.",
+  "upload.embeddedCoverHint":
+    "Embedded cover artwork found and will be used automatically unless you choose another image.",
   "upload.uploading": "Uploading...",
   "upload.uploadButton": "Upload",
   "upload.supportedFormats": "Supported: MP3, WAV, OGG, M4A, MP4",
@@ -331,6 +335,10 @@ const ID_TRANSLATIONS: TranslationDictionary = {
   "upload.clickSelectCover": "Klik untuk memilih cover",
   "upload.coverPreview": "Pratinjau cover",
   "upload.coverSaved": "Cover berhasil tersimpan.",
+  "upload.metadataDetectedHint":
+    "Metadata terdeteksi dari file audio. Kamu bisa tetap mengedit judul dan artis jika perlu.",
+  "upload.embeddedCoverHint":
+    "Cover bawaan dari file audio terdeteksi dan akan dipakai otomatis kecuali kamu memilih gambar lain.",
   "upload.uploading": "Sedang mengunggah...",
   "upload.uploadButton": "Unggah",
   "upload.supportedFormats": "Didukung: MP3, WAV, OGG, M4A, MP4",

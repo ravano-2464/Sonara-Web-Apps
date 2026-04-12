@@ -165,9 +165,11 @@ Sonara is an MVP-ready music player web app with:
 │   │       │   ├── 📄 album-grid.tsx
 │   │       │   ├── 📄 track-list.tsx
 │   │       │   └── 📄 upload-track-form.tsx
-│   │       └── 📁 hooks
-│   │           ├── 📄 use-track-upload.ts
-│   │           └── 📄 use-tracks.ts
+│   │       ├── 📁 hooks
+│   │       │   ├── 📄 use-track-upload.ts
+│   │       │   └── 📄 use-tracks.ts
+│   │       └── 📁 lib
+│   │           └── 📄 audio-file-metadata.ts
 │   ├── 📁 hooks
 │   │   ├── 📄 use-logout-confirm.tsx
 │   │   └── 📄 use-session-user.ts
