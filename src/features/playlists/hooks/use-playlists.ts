@@ -1,0 +1,130 @@
+"use client";
+
+import { createElement, useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
+
+import { AuthToastContent } from "@/features/auth/components/auth-toast-content";
+import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
+import { mapSupabaseErrorMessage } from "@/lib/supabase/error";
+import type { Playlist } from "@/types/models";
+
+const PLAYLIST_TOAST_DURATION_MS = 5000;
+
+export function usePlaylists(userId: string | undefined) {
+  const [playlists, setPlaylists] = useState<Playlist[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const showPlaylistToast = useCallback(
+    ({
+      title,
+      description,
+      tone,
+    }: {
+      title: string;
+      description: string;
+      tone: "success" | "error" | "info";
+    }) => {
+      toast.custom(
+        () =>
+          createElement(AuthToastContent, {
+            title,
+            description,
+            tone,
+            durationMs: PLAYLIST_TOAST_DURATION_MS,
+          }),
+        {
+          duration: PLAYLIST_TOAST_DURATION_MS,
+          className: "sonara-toast-shell",
+        },
+      );
+    },
+    [],
+  );
+
+  const fetchPlaylists = useCallback(async () => {
+    if (!userId) {
+      setPlaylists([]);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    const supabase = getSupabaseBrowserClient();
+    const { data, error: queryError } = await supabase
+      .from("playlists")
+      .select("*")
+      .eq("user_id", userId)
+      .order("updated_at", { ascending: false });
+
+    if (queryError) {
+      setError(mapSupabaseErrorMessage(queryError.message));
+      setPlaylists([]);
+      setLoading(false);
+      return;
+    }
+
+    setPlaylists(data ?? []);
+    setLoading(false);
+  }, [userId]);
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      void fetchPlaylists();
+    }, 0);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [fetchPlaylists]);
+
+  const createPlaylist = useCallback(
+    async (name: string, description: string) => {
+      if (!userId) {
+        const message = "User not found.";
+        showPlaylistToast({
+          title: "Playlist Gagal",
+          description: message,
+          tone: "error",
+        });
+        return { error: message };
+      }
+
+      const supabase = getSupabaseBrowserClient();
+      const { error: insertError } = await supabase.from("playlists").insert({
+        user_id: userId,
+        name,
+        description: description.trim() || null,
+      });
+
+      if (insertError) {
+        const message = mapSupabaseErrorMessage(insertError.message);
+        showPlaylistToast({
+          title: "Playlist Gagal",
+          description: message,
+          tone: "error",
+        });
+        return { error: message };
+      }
+
+      await fetchPlaylists();
+      showPlaylistToast({
+        title: "Playlist Berhasil",
+        description: `${name} berhasil dibuat.`,
+        tone: "success",
+      });
+      return { error: null };
+    },
+    [fetchPlaylists, showPlaylistToast, userId],
+  );
+
+  return {
+    playlists,
+    loading,
+    error,
+    refetch: fetchPlaylists,
+    createPlaylist,
+  };
+}

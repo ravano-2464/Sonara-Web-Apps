@@ -1,0 +1,168 @@
+"use client";
+
+import Link from "next/link";
+import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { AuthToastContent } from "@/features/auth/components/auth-toast-content";
+import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
+import { mapSupabaseErrorMessage } from "@/lib/supabase/error";
+
+const AUTH_TOAST_DURATION_MS = 5000;
+
+interface AuthFormProps {
+  mode: "sign-in" | "sign-up";
+}
+
+export function AuthForm({ mode }: AuthFormProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const isLogin = mode === "sign-in";
+  const nextPath = searchParams.get("next") || "/home";
+  const nextQuery =
+    nextPath && nextPath !== "/home" ? `?next=${encodeURIComponent(nextPath)}` : "";
+
+  const showAuthToast = ({
+    title,
+    description,
+    tone,
+  }: {
+    title: string;
+    description: string;
+    tone: "success" | "error" | "info";
+  }) => {
+    toast.custom(
+      () => (
+        <AuthToastContent
+          title={title}
+          description={description}
+          tone={tone}
+          durationMs={AUTH_TOAST_DURATION_MS}
+        />
+      ),
+      {
+        duration: AUTH_TOAST_DURATION_MS,
+        className: "sonara-toast-shell",
+      },
+    );
+  };
+
+  const submit = async () => {
+    setLoading(true);
+    setError(null);
+
+    const supabase = getSupabaseBrowserClient();
+
+    const result = isLogin
+      ? await supabase.auth.signInWithPassword({
+          email,
+          password,
+        })
+      : await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo:
+              typeof window !== "undefined"
+                ? `${window.location.origin}/home`
+                : undefined,
+          },
+        });
+
+    setLoading(false);
+
+    if (result.error) {
+      const message = mapSupabaseErrorMessage(result.error.message);
+      setError(message);
+      showAuthToast({
+        title: isLogin ? "Login Gagal" : "Registrasi Gagal",
+        description: message,
+        tone: "error",
+      });
+      return;
+    }
+
+    setError(null);
+
+    if (!isLogin && !result.data.session) {
+      showAuthToast({
+        title: "Registrasi Berhasil",
+        description: "Akun berhasil dibuat. Cek email kamu untuk verifikasi sebelum login.",
+        tone: "success",
+      });
+      router.push("/auth/login");
+      router.refresh();
+      return;
+    }
+
+    showAuthToast({
+      title: isLogin ? "Login Berhasil" : "Registrasi Berhasil",
+      description: "Kamu akan diarahkan ke halaman utama.",
+      tone: "success",
+    });
+
+    router.push(nextPath);
+    router.refresh();
+  };
+
+  return (
+    <section className="mx-auto w-full max-w-md rounded-2xl border border-zinc-800 bg-zinc-900/75 p-6 shadow-2xl shadow-black/40">
+      <h1 className="text-xl font-semibold text-zinc-50">Welcome to Sonara</h1>
+      <p className="mt-1 text-sm text-zinc-400">
+        {isLogin
+          ? "Sign in to access your library, playlists, and equalizer presets."
+          : "Create account to start uploading tracks and building playlists."}
+      </p>
+
+      <div className="mt-4 grid grid-cols-2 gap-2 rounded-lg bg-zinc-950 p-1">
+        <Link
+          href={`/auth/login${nextQuery}`}
+          className={`h-9 rounded-md text-sm ${
+            isLogin ? "bg-cyan-400 text-zinc-950" : "text-zinc-400 hover:text-zinc-200"
+          }`}
+        >
+          <span className="flex h-full items-center justify-center">Sign In</span>
+        </Link>
+        <Link
+          href={`/auth/register${nextQuery}`}
+          className={`h-9 rounded-md text-sm ${
+            !isLogin ? "bg-cyan-400 text-zinc-950" : "text-zinc-400 hover:text-zinc-200"
+          }`}
+        >
+          <span className="flex h-full items-center justify-center">Register</span>
+        </Link>
+      </div>
+
+      <div className="mt-4 space-y-3">
+        <Input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+          required
+        />
+        <Input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+          minLength={6}
+          required
+        />
+        <Button onClick={submit} disabled={loading} className="w-full">
+          {loading ? "Processing..." : isLogin ? "Sign In" : "Create Account"}
+        </Button>
+        {error ? <p className="text-sm text-rose-300">{error}</p> : null}
+      </div>
+    </section>
+  );
+}
