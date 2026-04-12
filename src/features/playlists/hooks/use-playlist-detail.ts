@@ -128,7 +128,13 @@ export function usePlaylistDetail(
   const updatePlaylist = useCallback(
     async (name: string, description: string, coverFile?: File) => {
       if (!playlist || !userId) {
-        return { error: "Playlist not found." };
+        const message = t("playlistDetail.notFound");
+        showPlaylistToast({
+          title: t("playlist.toastFailedTitle"),
+          description: message,
+          tone: "error",
+        });
+        return { error: message };
       }
 
       const supabase = getSupabaseBrowserClient();
@@ -148,6 +154,11 @@ export function usePlaylistDetail(
 
         if (coverUploadError) {
           const message = mapSupabaseErrorMessage(coverUploadError.message);
+          showPlaylistToast({
+            title: t("playlist.toastFailedTitle"),
+            description: message,
+            tone: "error",
+          });
           return { error: message };
         }
 
@@ -177,13 +188,24 @@ export function usePlaylistDetail(
         .eq("user_id", userId);
 
       if (updateError) {
-        return { error: mapSupabaseErrorMessage(updateError.message) };
+        const message = mapSupabaseErrorMessage(updateError.message);
+        showPlaylistToast({
+          title: t("playlist.toastFailedTitle"),
+          description: message,
+          tone: "error",
+        });
+        return { error: message };
       }
 
       await fetchPlaylist();
+      showPlaylistToast({
+        title: t("playlist.toastSuccessTitle"),
+        description: t("playlistDetail.updated"),
+        tone: "success",
+      });
       return { error: null };
     },
-    [fetchPlaylist, playlist, userId],
+    [fetchPlaylist, playlist, showPlaylistToast, t, userId],
   );
 
   const deletePlaylist = useCallback(async () => {

@@ -151,14 +151,16 @@ export function PlaylistList({ playlists, onCreate }: PlaylistListProps) {
                 className="block rounded-xl border border-zinc-800 bg-zinc-900/60 p-4 transition hover:border-cyan-400/70"
               >
                 {playlist.cover_url ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={playlist.cover_url}
-                    alt={`${playlist.name} cover`}
-                    className="mb-3 h-24 w-full rounded-lg object-cover"
-                  />
+                  <div className="mb-3 overflow-hidden rounded-lg bg-zinc-950/70">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={playlist.cover_url}
+                      alt={`${playlist.name} cover`}
+                      className="h-36 w-full object-contain"
+                    />
+                  </div>
                 ) : (
-                  <div className="mb-3 h-24 w-full rounded-lg bg-gradient-to-br from-cyan-500/30 via-blue-500/20 to-zinc-800/70" />
+                  <div className="mb-3 h-36 w-full rounded-lg bg-gradient-to-br from-cyan-500/30 via-blue-500/20 to-zinc-800/70" />
                 )}
                 <p className="text-sm font-semibold text-zinc-100">{playlist.name}</p>
                 <p className="mt-1 line-clamp-2 text-xs text-zinc-400">
