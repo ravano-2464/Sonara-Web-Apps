@@ -93,6 +93,8 @@ Sonara is an MVP-ready music player web app with:
 │   │   │       │   └── 📄 page.tsx
 │   │   │       ├── 📄 layout.tsx
 │   │   │       └── 📄 page.tsx
+│   │   ├── 📁 find-account
+│   │   │   └── 📄 page.tsx
 │   │   ├── 📁 forgot-password
 │   │   │   └── 📄 page.tsx
 │   │   ├── 📁 reset-password
@@ -111,6 +113,7 @@ Sonara is an MVP-ready music player web app with:
 │   │   │   ├── 📄 sidebar-nav.tsx
 │   │   │   └── 📄 theme-toggle.tsx
 │   │   ├── 📁 player
+│   │   │   ├── 📄 lyrics-panel.tsx
 │   │   │   ├── 📄 player-bar.tsx
 │   │   │   └── 📄 queue-panel.tsx
 │   │   ├── 📁 providers
@@ -131,18 +134,21 @@ Sonara is an MVP-ready music player web app with:
 │   │   │   │   └── 📄 player-waveform.tsx
 │   │   │   ├── 📁 hooks
 │   │   │   │   ├── 📄 use-audio-runtime.ts
+│   │   │   │   ├── 📄 use-output-device-type.ts
 │   │   │   │   ├── 📄 use-playback-shortcuts.ts
 │   │   │   │   ├── 📄 use-visualizer.ts
 │   │   │   │   └── 📄 use-waveform.ts
 │   │   │   ├── 📁 lib
 │   │   │   │   ├── 📄 audio-engine.ts
-│   │   │   │   └── 📄 equalizer-presets.ts
+│   │   │   │   ├── 📄 equalizer-presets.ts
+│   │   │   │   └── 📄 output-device.ts
 │   │   │   └── 📁 stores
 │   │   │       └── 📄 equalizer-store.ts
 │   │   ├── 📁 auth
 │   │   │   └── 📁 components
 │   │   │       ├── 📄 auth-form.tsx
 │   │   │       ├── 📄 auth-toast-content.tsx
+│   │   │       ├── 📄 find-account-form.tsx
 │   │   │       ├── 📄 forgot-password-form.tsx
 │   │   │       └── 📄 reset-password-form.tsx
 │   │   ├── 📁 favorites

@@ -20,7 +20,7 @@ export function AppShell({ username, children }: AppShellProps) {
       <div className="flex h-dvh overflow-hidden bg-zinc-950">
         <SidebarNav username={username} desktopOpen={isDesktopSidebarOpen} />
         <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
-          <main className="sonara-scrollbar min-h-0 flex-1 overflow-y-auto px-4 pb-44 pt-4 sm:px-6 lg:px-8">
+          <main className="sonara-scrollbar min-h-0 flex-1 overflow-x-hidden overflow-y-auto px-4 pb-44 pt-4 sm:px-6 lg:px-8">
             <SessionPanel
               username={username}
               sidebarOpen={isDesktopSidebarOpen}

@@ -114,6 +114,7 @@ body {
     linear-gradient(180deg, var(--surface-0) 0%, var(--surface-1) 100%);
   color: var(--text-primary);
   font-family: var(--font-space-grotesk), sans-serif;
+  overflow-x: hidden;
 }
 
 ::selection {
@@ -170,25 +171,26 @@ body {
 
 .sonara-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-thumb) transparent;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  overscroll-behavior: contain;
 }
 
 .sonara-scrollbar::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
 }
 
 .sonara-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-  margin: 6px;
+  background: var(--scrollbar-track);
+  border-radius: 999px;
 }
 
 .sonara-scrollbar::-webkit-scrollbar-thumb {
   background: var(--scrollbar-thumb);
-  border: 3px solid transparent;
-  background-clip: padding-box;
+  border: 0;
   border-radius: 999px;
-  box-shadow: 0 0 0 1px var(--scrollbar-track);
+  box-shadow: none;
+  min-height: 40px;
 }
 
 .sonara-scrollbar::-webkit-scrollbar-thumb:hover {
@@ -197,9 +199,19 @@ body {
 
 .sonara-scrollbar::-webkit-scrollbar-button,
 .sonara-scrollbar::-webkit-scrollbar-button:single-button {
-  display: none;
-  width: 0;
-  height: 0;
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+}
+
+.sonara-scrollbar::-webkit-scrollbar-button:vertical:start:decrement,
+.sonara-scrollbar::-webkit-scrollbar-button:vertical:end:increment,
+.sonara-scrollbar::-webkit-scrollbar-button:horizontal:start:decrement,
+.sonara-scrollbar::-webkit-scrollbar-button:horizontal:end:increment {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 .sonara-scrollbar::-webkit-scrollbar-corner {

@@ -38,17 +38,24 @@ export function useTracks({ search, genre }: UseTracksOptions = {}) {
       query = query.eq("genre", genre);
     }
 
-    const { data, error: queryError } = await query;
+    try {
+      const { data, error: queryError } = await query;
 
-    if (queryError) {
-      setError(mapSupabaseErrorMessage(queryError.message));
+      if (queryError) {
+        setError(mapSupabaseErrorMessage(queryError.message));
+        setTracks([]);
+        return;
+      }
+
+      setTracks(data ?? []);
+    } catch (queryError) {
+      const message =
+        queryError instanceof Error ? queryError.message : "Failed to load tracks.";
+      setError(mapSupabaseErrorMessage(message));
       setTracks([]);
+    } finally {
       setLoading(false);
-      return;
     }
-
-    setTracks(data ?? []);
-    setLoading(false);
   }, [genre, search]);
 
   useEffect(() => {

@@ -312,6 +312,24 @@ as $$
   limit 1;
 $$;
 
+-- Resolve email to username for account recovery.
+create or replace function public.resolve_username_by_email(account_email text)
+returns text
+language sql
+security definer
+set search_path = public
+as $$
+  with normalized as (
+    select lower(trim(account_email)) as value
+  )
+  select nullif(trim(u.display_name), '')
+  from public.users u
+  cross join normalized n
+  where u.email is not null
+    and lower(u.email) = n.value
+  limit 1;
+$$;
+
 drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
 after insert on auth.users
