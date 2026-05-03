@@ -61,7 +61,7 @@ export function PlayerBar() {
   }, [repeatMode, t]);
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-zinc-800 bg-zinc-950/95 backdrop-blur">
+    <div className="relative z-40 shrink-0 border-t border-zinc-800 bg-zinc-950/95 backdrop-blur">
       {showEqualizer || showLyrics || isQueueOpen ? (
         <div className="grid gap-3 border-b border-zinc-800 px-3 py-3 md:grid-cols-3 md:px-6">
           {showEqualizer ? <EqualizerPanel onClose={() => setShowEqualizer(false)} /> : null}
