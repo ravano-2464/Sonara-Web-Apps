@@ -60,7 +60,7 @@ Sonara is an MVP-ready music player web app with:
 ## 🗂️ Folder Structure
 
 ```text
-📦sonara-app/
+📦 sonara-app/
 ├── 📁 public
 │   ├── 🖼️ file.svg
 │   ├── 🖼️ globe.svg
