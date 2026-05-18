@@ -495,7 +495,7 @@ with check (auth.uid() = user_id);
 -- Storage buckets
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values
-  ('track-audio', 'track-audio', true, 104857600, array['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/mp4', 'video/mp4']),
+  ('track-audio', 'track-audio', true, null, array['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/mp4', 'video/mp4']),
   ('track-covers', 'track-covers', true, 10485760, array['image/jpeg', 'image/png', 'image/webp'])
 on conflict (id) do update
 set

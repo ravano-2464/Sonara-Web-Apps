@@ -67,6 +67,7 @@ export function UploadTrackForm({ userId, uploaderName, onUploaded }: UploadTrac
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setMessage(null);
 
     if (!audioFile) {
       setMessage(t("upload.selectAudioRequired"));
@@ -85,7 +86,6 @@ export function UploadTrackForm({ userId, uploaderName, onUploaded }: UploadTrac
     });
 
     if (result.error) {
-      setMessage(result.error);
       return;
     }
 
@@ -111,6 +111,8 @@ export function UploadTrackForm({ userId, uploaderName, onUploaded }: UploadTrac
   };
 
   const effectiveCoverPreview = coverPreviewUrl ?? uploadedCoverUrl;
+  const feedbackMessage = error ?? message;
+  const feedbackToneClass = error ? "text-rose-300" : "text-zinc-300";
 
   return (
     <form
@@ -344,8 +346,9 @@ export function UploadTrackForm({ userId, uploaderName, onUploaded }: UploadTrac
         <p className="text-xs text-zinc-400">{t("upload.supportedFormats")}</p>
       </div>
 
-      {message ? <p className="mt-2 text-center text-xs text-zinc-300">{message}</p> : null}
-      {error ? <p className="mt-1 text-center text-xs text-rose-300">{error}</p> : null}
+      {feedbackMessage ? (
+        <p className={`mt-2 text-center text-xs ${feedbackToneClass}`}>{feedbackMessage}</p>
+      ) : null}
     </form>
   );
 }
