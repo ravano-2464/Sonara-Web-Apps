@@ -34,6 +34,11 @@ export function RecentlyPlayedList({ items, onPlay }: RecentlyPlayedListProps) {
             <div className="min-w-0">
               <p className="truncate text-sm text-zinc-100">{item.tracks.title}</p>
               <p className="truncate text-xs text-zinc-400">{item.tracks.artist}</p>
+              {item.tracks.uploader_name ? (
+                <p className="truncate text-[11px] text-zinc-500">
+                  {t("trackList.uploadedBy", { name: item.tracks.uploader_name })}
+                </p>
+              ) : null}
             </div>
             <div className="text-right text-xs text-zinc-500">
               <p>{formatDuration(item.tracks.duration)}</p>

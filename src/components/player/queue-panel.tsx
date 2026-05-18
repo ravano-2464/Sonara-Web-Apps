@@ -48,7 +48,7 @@ export function QueuePanel({
           {t("queue.empty")}
         </p>
       ) : (
-        <ul className="sonara-scrollbar max-h-48 space-y-1 overflow-y-auto pr-1">
+        <ul className="max-h-48 space-y-1 overflow-y-auto pr-1">
           {queue.map((track, index) => {
             const active = index === currentIndex;
 

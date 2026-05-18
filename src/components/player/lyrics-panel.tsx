@@ -35,7 +35,7 @@ export function LyricsPanel({ track, onClose }: LyricsPanelProps) {
         ) : null}
       </div>
 
-      <div className="sonara-scrollbar max-h-48 overflow-y-auto rounded-lg border border-zinc-800 bg-zinc-950/70 p-3">
+      <div className="max-h-48 overflow-y-auto rounded-lg border border-zinc-800 bg-zinc-950/70 p-3">
         {lyrics ? (
           <p className="whitespace-pre-wrap text-xs leading-6 text-zinc-200">{lyrics}</p>
         ) : (

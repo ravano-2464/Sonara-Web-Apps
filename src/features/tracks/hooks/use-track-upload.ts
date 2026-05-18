@@ -5,12 +5,15 @@ import { toast } from "sonner";
 
 import { useI18n } from "@/components/providers/i18n-provider";
 import { AuthToastContent } from "@/features/auth/components/auth-toast-content";
+import { useUploadTracker } from "@/features/tracks/components/upload-tracker-provider";
+import { env } from "@/lib/env";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
 import { mapSupabaseErrorMessage } from "@/lib/supabase/error";
 
 interface UploadPayload {
   title: string;
   artist: string;
+  isPublic: boolean;
   album?: string;
   genre?: string;
   lyrics?: string;
@@ -93,8 +96,96 @@ function inferAudioContentType(file: File): string | undefined {
   return undefined;
 }
 
-export function useTrackUpload(userId: string | undefined) {
+interface UploadProgressSnapshot {
+  loadedBytes: number;
+  totalBytes: number;
+  speedBytesPerSecond: number;
+}
+
+function encodeStorageObjectPath(path: string) {
+  return path
+    .split("/")
+    .map((segment) => encodeURIComponent(segment))
+    .join("/");
+}
+
+function uploadFileWithProgress({
+  bucket,
+  path,
+  file,
+  contentType,
+  accessToken,
+  onProgress,
+}: {
+  bucket: string;
+  path: string;
+  file: File;
+  contentType?: string;
+  accessToken: string;
+  onProgress?: (snapshot: UploadProgressSnapshot) => void;
+}) {
+  return new Promise<void>((resolve, reject) => {
+    const startedAt = performance.now();
+    const objectPath = encodeStorageObjectPath(path);
+    const url = `${env.supabaseUrl()}/storage/v1/object/${bucket}/${objectPath}`;
+    const xhr = new XMLHttpRequest();
+
+    xhr.open("POST", url);
+    xhr.setRequestHeader("Authorization", `Bearer ${accessToken}`);
+    xhr.setRequestHeader("apikey", env.supabaseAnonKey());
+    xhr.setRequestHeader("x-upsert", "false");
+
+    if (contentType) {
+      xhr.setRequestHeader("content-type", contentType);
+    }
+
+    xhr.upload.onprogress = (event) => {
+      const loadedBytes = event.loaded;
+      const totalBytes = event.lengthComputable ? event.total : file.size;
+      const elapsedSeconds = Math.max((performance.now() - startedAt) / 1000, 0.05);
+      const speedBytesPerSecond = loadedBytes / elapsedSeconds;
+
+      onProgress?.({
+        loadedBytes,
+        totalBytes,
+        speedBytesPerSecond,
+      });
+    };
+
+    xhr.onerror = () => reject(new Error("Network error while uploading file."));
+
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        resolve();
+        return;
+      }
+
+      let message = `Upload failed (${xhr.status}).`;
+
+      if (xhr.responseText) {
+        try {
+          const parsed = JSON.parse(xhr.responseText) as { error?: string; message?: string };
+          message = parsed.message ?? parsed.error ?? message;
+        } catch {
+          // Ignore JSON parsing failures and keep generic message.
+        }
+      }
+
+      reject(new Error(message));
+    };
+
+    xhr.send(file);
+  });
+}
+
+export function useTrackUpload(userId: string | undefined, uploaderName?: string | null) {
   const { t } = useI18n();
+  const {
+    startUploadTracking,
+    updateUploadTracking,
+    markUploadCompleted,
+    markUploadFailed,
+  } = useUploadTracker();
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -129,14 +220,22 @@ export function useTrackUpload(userId: string | undefined) {
     async ({
       title,
       artist,
+      isPublic,
       album,
       genre,
       lyrics,
       audioFile,
       coverFile,
     }: UploadPayload): Promise<UploadTrackResult> => {
+      const totalUploadBytes = audioFile.size + (coverFile?.size ?? 0);
+      const trackingId = startUploadTracking({
+        trackTitle: title,
+        totalBytes: totalUploadBytes,
+      });
+
       if (!userId) {
         const message = t("upload.userMustSignIn");
+        markUploadFailed(trackingId, message);
         showUploadToast({
           title: t("upload.toastFailedTitle"),
           description: message,
@@ -157,10 +256,13 @@ export function useTrackUpload(userId: string | undefined) {
         const timestamp = Date.now();
         const safeAudioName = slugifyFileName(audioFile.name);
         const audioPath = `${userId}/${timestamp}-${safeAudioName}`;
+        const uploadStartedAt = performance.now();
+        let transferredBytesBeforeCurrentFile = 0;
 
         if (!isSupportedAudioFile(audioFile)) {
           const message = t("upload.unsupportedFormat");
           setError(message);
+          markUploadFailed(trackingId, message);
           showUploadToast({
             title: t("upload.toastFailedTitle"),
             description: message,
@@ -175,17 +277,15 @@ export function useTrackUpload(userId: string | undefined) {
 
         const duration = await readAudioDuration(audioFile);
         const audioContentType = inferAudioContentType(audioFile);
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        const accessToken = session?.access_token;
 
-        const { error: audioUploadError } = await supabase.storage
-          .from(AUDIO_BUCKET)
-          .upload(audioPath, audioFile, {
-            contentType: audioContentType,
-            upsert: false,
-          });
-
-        if (audioUploadError) {
-          const message = mapSupabaseErrorMessage(audioUploadError.message);
+        if (!accessToken) {
+          const message = t("upload.userMustSignIn");
           setError(message);
+          markUploadFailed(trackingId, message);
           showUploadToast({
             title: t("upload.toastFailedTitle"),
             description: message,
@@ -198,6 +298,47 @@ export function useTrackUpload(userId: string | undefined) {
           };
         }
 
+        updateUploadTracking(trackingId, {
+          stage: "uploadingAudio",
+          progressPercent: 0,
+          uploadedBytes: 0,
+          totalBytes: totalUploadBytes,
+          speedBytesPerSecond: 0,
+        });
+
+        await uploadFileWithProgress({
+          bucket: AUDIO_BUCKET,
+          path: audioPath,
+          file: audioFile,
+          contentType: audioContentType,
+          accessToken,
+          onProgress: ({ loadedBytes, speedBytesPerSecond }) => {
+            const uploadedBytes = transferredBytesBeforeCurrentFile + loadedBytes;
+            const progressPercent =
+              totalUploadBytes > 0 ? (uploadedBytes / totalUploadBytes) * 100 : 0;
+
+            updateUploadTracking(trackingId, {
+              stage: "uploadingAudio",
+              uploadedBytes,
+              totalBytes: totalUploadBytes,
+              progressPercent,
+              speedBytesPerSecond,
+            });
+          },
+        });
+
+        transferredBytesBeforeCurrentFile += audioFile.size;
+        const audioElapsedSeconds = Math.max((performance.now() - uploadStartedAt) / 1000, 0.05);
+        const audioAverageSpeed = transferredBytesBeforeCurrentFile / audioElapsedSeconds;
+
+        updateUploadTracking(trackingId, {
+          stage: coverFile ? "uploadingCover" : "savingTrack",
+          uploadedBytes: transferredBytesBeforeCurrentFile,
+          totalBytes: totalUploadBytes,
+          progressPercent: totalUploadBytes > 0 ? (transferredBytesBeforeCurrentFile / totalUploadBytes) * 100 : 100,
+          speedBytesPerSecond: audioAverageSpeed,
+        });
+
         const {
           data: { publicUrl: audioUrl },
         } = supabase.storage.from(AUDIO_BUCKET).getPublicUrl(audioPath);
@@ -208,27 +349,46 @@ export function useTrackUpload(userId: string | undefined) {
           const safeCoverName = slugifyFileName(coverFile.name);
           const coverPath = `${userId}/${timestamp}-${safeCoverName}`;
 
-          const { error: coverUploadError } = await supabase.storage
-            .from(COVER_BUCKET)
-            .upload(coverPath, coverFile, {
-              contentType: coverFile.type,
-              upsert: false,
-            });
+          const coverUploadStartedAt = performance.now();
 
-          if (coverUploadError) {
-            const message = mapSupabaseErrorMessage(coverUploadError.message);
-            setError(message);
-            showUploadToast({
-              title: t("upload.toastFailedTitle"),
-              description: message,
-              tone: "error",
-            });
-            return {
-              error: message,
-              coverUrl: null,
-              audioUrl: null,
-            };
-          }
+          await uploadFileWithProgress({
+            bucket: COVER_BUCKET,
+            path: coverPath,
+            file: coverFile,
+            contentType: coverFile.type,
+            accessToken,
+            onProgress: ({ loadedBytes, speedBytesPerSecond }) => {
+              const uploadedBytes = transferredBytesBeforeCurrentFile + loadedBytes;
+              const progressPercent =
+                totalUploadBytes > 0 ? (uploadedBytes / totalUploadBytes) * 100 : 0;
+
+              updateUploadTracking(trackingId, {
+                stage: "uploadingCover",
+                uploadedBytes,
+                totalBytes: totalUploadBytes,
+                progressPercent,
+                speedBytesPerSecond,
+              });
+            },
+          });
+          transferredBytesBeforeCurrentFile += coverFile.size;
+
+          const coverElapsedSeconds = Math.max(
+            (performance.now() - coverUploadStartedAt) / 1000,
+            0.05,
+          );
+          const coverAverageSpeed = coverFile.size / coverElapsedSeconds;
+
+          updateUploadTracking(trackingId, {
+            stage: "savingTrack",
+            uploadedBytes: transferredBytesBeforeCurrentFile,
+            totalBytes: totalUploadBytes,
+            progressPercent:
+              totalUploadBytes > 0
+                ? (transferredBytesBeforeCurrentFile / totalUploadBytes) * 100
+                : 100,
+            speedBytesPerSecond: coverAverageSpeed,
+          });
 
           const {
             data: { publicUrl },
@@ -239,6 +399,8 @@ export function useTrackUpload(userId: string | undefined) {
 
         const { error: insertError } = await supabase.from("tracks").insert({
           user_id: userId,
+          uploader_name: uploaderName?.trim() || null,
+          is_public: isPublic,
           title,
           artist,
           album: album?.trim() || null,
@@ -252,6 +414,7 @@ export function useTrackUpload(userId: string | undefined) {
         if (insertError) {
           const message = mapSupabaseErrorMessage(insertError.message);
           setError(message);
+          markUploadFailed(trackingId, message);
           showUploadToast({
             title: t("upload.toastFailedTitle"),
             description: message,
@@ -266,6 +429,18 @@ export function useTrackUpload(userId: string | undefined) {
           tone: "success",
         });
 
+        const totalElapsedSeconds = Math.max((performance.now() - uploadStartedAt) / 1000, 0.05);
+        const averageSpeedBytesPerSecond = totalUploadBytes / totalElapsedSeconds;
+
+        updateUploadTracking(trackingId, {
+          stage: "completed",
+          progressPercent: 100,
+          uploadedBytes: totalUploadBytes,
+          totalBytes: totalUploadBytes,
+          speedBytesPerSecond: averageSpeedBytesPerSecond,
+        });
+        markUploadCompleted(trackingId);
+
         return { error: null, coverUrl, audioUrl };
       } catch (caughtError) {
         const message =
@@ -273,6 +448,7 @@ export function useTrackUpload(userId: string | undefined) {
             ? mapSupabaseErrorMessage(caughtError.message)
             : t("upload.unexpectedError");
         setError(message);
+        markUploadFailed(trackingId, message);
         showUploadToast({
           title: t("upload.toastFailedTitle"),
           description: message,
@@ -283,7 +459,16 @@ export function useTrackUpload(userId: string | undefined) {
         setUploading(false);
       }
     },
-    [showUploadToast, t, userId],
+    [
+      markUploadCompleted,
+      markUploadFailed,
+      showUploadToast,
+      startUploadTracking,
+      t,
+      updateUploadTracking,
+      uploaderName,
+      userId,
+    ],
   );
 
   return {

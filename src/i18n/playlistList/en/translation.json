@@ -1,0 +1,12 @@
+{
+    "playlistList.createTitle": "Create Playlist",
+    "playlistList.playlistName": "Playlist name",
+    "playlistList.descriptionPlaceholder": "Description",
+    "playlistList.coverImageOptional": "Cover image (optional)",
+    "playlistList.clickSelectCover": "Click to select cover",
+    "playlistList.creating": "Creating...",
+    "playlistList.createButton": "Create",
+    "playlistList.created": "Playlist created.",
+    "playlistList.empty": "No playlists yet.",
+    "playlistList.noDescription": "No description"
+}

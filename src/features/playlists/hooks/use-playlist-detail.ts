@@ -93,7 +93,7 @@ export function usePlaylistDetail(
         .maybeSingle(),
       supabase
         .from("playlist_tracks")
-        .select("playlist_id, track_id, position, added_at, tracks(*)")
+        .select("playlist_id, track_id, position, added_at, tracks!inner(*)")
         .eq("playlist_id", playlistId)
         .order("position", { ascending: true }),
     ]);

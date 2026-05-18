@@ -110,7 +110,7 @@ export function EqualizerPanel({ onClose }: EqualizerPanelProps) {
                   : "pointer-events-none -translate-y-1 scale-95 opacity-0",
               )}
             >
-              <div className="max-h-64 overflow-y-auto sonara-scrollbar" role="listbox">
+              <div className="max-h-64 overflow-y-auto" role="listbox">
                 {presetNames.map((preset) => {
                   const isActive = activePresetName === preset;
 
@@ -193,7 +193,7 @@ export function EqualizerPanel({ onClose }: EqualizerPanelProps) {
         </div>
       </div>
 
-      <div className="max-h-[56vh] overflow-y-auto pr-1 sonara-scrollbar">
+      <div className="max-h-[56vh] overflow-y-auto pr-1">
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
           {EQ_BANDS.map((frequency) => (
             <label

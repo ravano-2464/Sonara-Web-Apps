@@ -1,0 +1,17 @@
+{
+    "playlistDetail.title": "Detail Playlist",
+    "playlistDetail.description": "Kelola metadata, tambah lagu, dan atur komposisi antrean.",
+    "playlistDetail.loading": "Memuat playlist...",
+    "playlistDetail.notFound": "Playlist tidak ditemukan.",
+    "playlistDetail.editSubtitle": "Ubah detail, tambahkan lagu, atau hapus lagu dari playlist ini.",
+    "playlistDetail.descriptionPlaceholder": "Deskripsi",
+    "playlistDetail.updated": "Playlist berhasil diperbarui.",
+    "playlistDetail.addTrackTitle": "Tambah Lagu",
+    "playlistDetail.selectTrack": "Pilih lagu",
+    "playlistDetail.trackAdded": "Lagu berhasil ditambahkan.",
+    "playlistDetail.trackRemoved": "Lagu berhasil dihapus.",
+    "playlistDetail.emptyTracks": "Playlist ini kosong.",
+    "playlistDetail.removeTrackAria": "Hapus lagu dari playlist",
+    "playlistDetail.errorPrefix": "Error: {error}",
+    "playlistDetail.deleted": "Hapus Playlist"
+}

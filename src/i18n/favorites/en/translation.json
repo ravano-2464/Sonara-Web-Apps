@@ -1,0 +1,12 @@
+{
+    "favorites.title": "Favorites",
+    "favorites.description": "Your liked tracks collected in one place.",
+    "favorites.loading": "Loading favorites...",
+    "favorites.empty": "No favorites yet. Tap the heart icon on any track.",
+    "favorites.toastSuccessTitle": "Favorites Updated",
+    "favorites.toastFailedTitle": "Favorites Failed",
+    "favorites.userMustSignIn": "You must be signed in to manage favorites.",
+    "favorites.defaultTrackLabel": "this track",
+    "favorites.addedDescription": "{title} was added to favorites.",
+    "favorites.removedDescription": "{title} was removed from favorites."
+}

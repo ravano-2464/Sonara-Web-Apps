@@ -1,0 +1,15 @@
+{
+    "findAccount.title": "Find Account",
+    "findAccount.description": "Enter your account email to find your username.",
+    "findAccount.emailRequired": "Email is required.",
+    "findAccount.searching": "Searching...",
+    "findAccount.searchButton": "Find Username",
+    "findAccount.failedTitle": "Find Account Failed",
+    "findAccount.notFoundTitle": "Account Not Found",
+    "findAccount.notFound": "No account was found with that email.",
+    "findAccount.foundTitle": "Account Found",
+    "findAccount.foundDescription": "We found your account username.",
+    "findAccount.result": "Your username is: {username}",
+    "findAccount.backToSignIn": "Back to Sign In",
+    "findAccount.backToForgotPassword": "Forgot password?"
+}

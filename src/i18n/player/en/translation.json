@@ -1,0 +1,16 @@
+{
+    "player.repeatOff": "Repeat off",
+    "player.repeatAll": "Repeat all",
+    "player.repeatOne": "Repeat one",
+    "player.noTrackSelected": "No track selected",
+    "player.toggleShuffle": "Toggle shuffle",
+    "player.previousTrack": "Previous track",
+    "player.pause": "Pause",
+    "player.play": "Play",
+    "player.nextTrack": "Next track",
+    "player.seek": "Seek",
+    "player.toggleEqualizer": "Toggle equalizer",
+    "player.toggleQueue": "Toggle queue",
+    "player.toggleLyrics": "Toggle lyrics",
+    "player.volume": "Volume"
+}

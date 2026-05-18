@@ -16,7 +16,7 @@ import {
   type Locale,
   type TranslationKey,
   type TranslationParams,
-} from "@/lib/i18n";
+} from "@/lib/translation";
 
 interface I18nContextValue {
   locale: Locale;
@@ -115,3 +115,4 @@ export function useI18n() {
 
   return context;
 }
+

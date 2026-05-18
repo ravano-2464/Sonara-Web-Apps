@@ -11,16 +11,18 @@ import { useTrackUpload } from "@/features/tracks/hooks/use-track-upload";
 
 interface UploadTrackFormProps {
   userId: string | undefined;
+  uploaderName?: string | null;
   onUploaded: () => void;
 }
 
-export function UploadTrackForm({ userId, onUploaded }: UploadTrackFormProps) {
+export function UploadTrackForm({ userId, uploaderName, onUploaded }: UploadTrackFormProps) {
   const { t } = useI18n();
   const [title, setTitle] = useState("");
   const [artist, setArtist] = useState("");
   const [album, setAlbum] = useState("");
   const [genre, setGenre] = useState("");
   const [lyrics, setLyrics] = useState("");
+  const [isPublic, setIsPublic] = useState(false);
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreviewUrl, setCoverPreviewUrl] = useState<string | null>(null);
@@ -36,7 +38,7 @@ export function UploadTrackForm({ userId, onUploaded }: UploadTrackFormProps) {
   const manualCoverSelectedRef = useRef(false);
   const embeddedCoverActiveRef = useRef(false);
 
-  const { uploading, error, uploadTrack } = useTrackUpload(userId);
+  const { uploading, error, uploadTrack } = useTrackUpload(userId, uploaderName);
 
   useEffect(() => {
     return () => {
@@ -74,6 +76,7 @@ export function UploadTrackForm({ userId, onUploaded }: UploadTrackFormProps) {
     const result = await uploadTrack({
       title,
       artist,
+      isPublic,
       album,
       genre,
       lyrics,
@@ -93,6 +96,7 @@ export function UploadTrackForm({ userId, onUploaded }: UploadTrackFormProps) {
     setAlbum("");
     setGenre("");
     setLyrics("");
+    setIsPublic(false);
     setAudioFile(null);
     setCoverFile(null);
     setCoverPreviewFromFile(null);
@@ -110,6 +114,7 @@ export function UploadTrackForm({ userId, onUploaded }: UploadTrackFormProps) {
 
   return (
     <form
+      id="upload-track-form"
       onSubmit={handleSubmit}
       className="rounded-xl border border-zinc-800 bg-zinc-900/70 p-5"
     >
@@ -164,6 +169,37 @@ export function UploadTrackForm({ userId, onUploaded }: UploadTrackFormProps) {
         rows={4}
         className="mt-3 w-full resize-y rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-sm text-zinc-100 placeholder:text-zinc-500 focus:border-cyan-400 focus:outline-none focus:ring-1 focus:ring-cyan-400"
       />
+
+      <div className="mt-3 rounded-lg border border-zinc-800 bg-zinc-950/60 p-3">
+        <p className="text-xs font-medium text-zinc-200">{t("upload.visibilityLabel")}</p>
+        <p className="mt-1 text-[11px] text-zinc-500">{t("upload.visibilityHint")}</p>
+        <div className="mt-3 inline-flex rounded-md border border-zinc-700 bg-zinc-900 p-1">
+          <button
+            type="button"
+            onClick={() => setIsPublic(false)}
+            className={`rounded px-3 py-1.5 text-xs transition ${
+              !isPublic
+                ? "bg-zinc-100 text-zinc-950"
+                : "text-zinc-300 hover:bg-zinc-800"
+            }`}
+            aria-pressed={!isPublic}
+          >
+            {t("upload.visibilityPrivate")}
+          </button>
+          <button
+            type="button"
+            onClick={() => setIsPublic(true)}
+            className={`rounded px-3 py-1.5 text-xs transition ${
+              isPublic
+                ? "bg-cyan-400 text-zinc-950"
+                : "text-zinc-300 hover:bg-zinc-800"
+            }`}
+            aria-pressed={isPublic}
+          >
+            {t("upload.visibilityPublic")}
+          </button>
+        </div>
+      </div>
 
       <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>

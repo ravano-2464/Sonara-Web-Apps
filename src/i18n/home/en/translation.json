@@ -1,0 +1,15 @@
+{
+    "home.title": "Home",
+    "home.description": "Discover your latest uploads, playlists, and listening activity.",
+    "home.nowBuilding": "Now Building",
+    "home.heroTitle": "Real-time playback with waveform + 32-band EQ",
+    "home.heroDescription": "Use the persistent player bar to control queue, equalizer presets, shuffle/repeat, and keyboard playback shortcuts.",
+    "home.yourPlaylists": "Your Playlists",
+    "home.noPlaylists": "No playlists yet.",
+    "home.createOne": "Create one",
+    "home.noDescription": "No description",
+    "home.recentlyPlayed": "Recently Played",
+    "home.nothingPlayed": "Nothing played yet.",
+    "home.tracks": "Tracks",
+    "home.loadingTracks": "Loading tracks..."
+}

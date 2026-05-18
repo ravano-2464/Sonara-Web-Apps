@@ -1,0 +1,12 @@
+{
+    "playlistList.createTitle": "Buat Playlist",
+    "playlistList.playlistName": "Nama playlist",
+    "playlistList.descriptionPlaceholder": "Deskripsi",
+    "playlistList.coverImageOptional": "Gambar cover (opsional)",
+    "playlistList.clickSelectCover": "Klik untuk memilih cover",
+    "playlistList.creating": "Membuat...",
+    "playlistList.createButton": "Buat",
+    "playlistList.created": "Playlist berhasil dibuat.",
+    "playlistList.empty": "Belum ada playlist.",
+    "playlistList.noDescription": "Tidak ada deskripsi"
+}

@@ -1,0 +1,11 @@
+{
+    "library.title": "Library",
+    "library.description": "Upload audio, search tracks, and curate your catalog.",
+    "library.searchPlaceholder": "Search by title, artist, or album",
+    "library.searchAria": "Search tracks",
+    "library.filterByGenreAria": "Filter by genre",
+    "library.allGenres": "All genres",
+    "library.moreGenres": "More genres",
+    "library.loadingTracks": "Loading tracks...",
+    "library.emptyTracks": "No tracks in library. Upload your first track above."
+}

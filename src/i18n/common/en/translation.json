@@ -1,0 +1,17 @@
+{
+    "common.signedIn": "Signed in",
+    "common.logout": "Logout",
+    "common.cancel": "Cancel",
+    "common.close": "Close",
+    "common.description": "Description",
+    "common.loading": "Loading...",
+    "common.processing": "Processing...",
+    "common.create": "Create",
+    "common.saveChanges": "Save Changes",
+    "common.delete": "Delete",
+    "common.add": "Add",
+    "common.reset": "Reset",
+    "common.custom": "Custom",
+    "common.upload": "Upload",
+    "common.requestNewResetLink": "Request a new reset link"
+}

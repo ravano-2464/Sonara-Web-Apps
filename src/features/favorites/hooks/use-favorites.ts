@@ -64,7 +64,7 @@ export function useFavorites(userId: string | undefined) {
     const supabase = getSupabaseBrowserClient();
     const { data, error: queryError } = await supabase
       .from("favorites")
-      .select("user_id, track_id, created_at, tracks(*)")
+      .select("user_id, track_id, created_at, tracks!inner(*)")
       .eq("user_id", userId)
       .order("created_at", { ascending: false });
 

@@ -7,7 +7,7 @@ import { toast } from "sonner";
 
 import { LanguageToggle } from "@/components/layout/language-toggle";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { useI18n } from "@/components/providers/i18n-provider";
 import { AuthToastContent } from "@/features/auth/components/auth-toast-content";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
@@ -176,20 +176,22 @@ export function ResetPasswordForm() {
         <p className="mt-4 text-sm text-zinc-400">{t("reset.verifying")}</p>
       ) : recoveryReady ? (
         <div className="mt-4 space-y-3">
-          <Input
-            type="password"
+          <PasswordInput
             placeholder={t("reset.newPasswordPlaceholder")}
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             minLength={6}
+            showLabel={t("auth.showPassword")}
+            hideLabel={t("auth.hidePassword")}
             required
           />
-          <Input
-            type="password"
+          <PasswordInput
             placeholder={t("reset.confirmPasswordPlaceholder")}
             value={confirmPassword}
             onChange={(event) => setConfirmPassword(event.target.value)}
             minLength={6}
+            showLabel={t("auth.showPassword")}
+            hideLabel={t("auth.hidePassword")}
             required
           />
           <Button onClick={submit} disabled={loading} className="w-full">

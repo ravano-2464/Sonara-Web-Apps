@@ -1,0 +1,16 @@
+{
+    "player.repeatOff": "Repeat mati",
+    "player.repeatAll": "Repeat semua",
+    "player.repeatOne": "Repeat satu",
+    "player.noTrackSelected": "Belum ada lagu dipilih",
+    "player.toggleShuffle": "Aktif/nonaktifkan shuffle",
+    "player.previousTrack": "Lagu sebelumnya",
+    "player.pause": "Jeda",
+    "player.play": "Putar",
+    "player.nextTrack": "Lagu berikutnya",
+    "player.seek": "Geser posisi lagu",
+    "player.toggleEqualizer": "Tampilkan/sembunyikan equalizer",
+    "player.toggleQueue": "Tampilkan/sembunyikan antrean",
+    "player.toggleLyrics": "Tampilkan/sembunyikan lirik",
+    "player.volume": "Volume"
+}

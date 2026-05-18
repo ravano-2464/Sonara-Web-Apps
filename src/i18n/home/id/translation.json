@@ -1,0 +1,15 @@
+{
+    "home.title": "Beranda",
+    "home.description": "Lihat unggahan terbaru, playlist, dan aktivitas mendengarkan kamu.",
+    "home.nowBuilding": "Sedang Dibangun",
+    "home.heroTitle": "Pemutaran real-time dengan waveform + EQ 32-band",
+    "home.heroDescription": "Gunakan player bar tetap untuk mengatur antrean, preset equalizer, shuffle/repeat, dan shortcut keyboard.",
+    "home.yourPlaylists": "Playlist Kamu",
+    "home.noPlaylists": "Belum ada playlist.",
+    "home.createOne": "Buat sekarang",
+    "home.noDescription": "Tidak ada deskripsi",
+    "home.recentlyPlayed": "Baru Diputar",
+    "home.nothingPlayed": "Belum ada yang diputar.",
+    "home.tracks": "Lagu",
+    "home.loadingTracks": "Memuat lagu..."
+}

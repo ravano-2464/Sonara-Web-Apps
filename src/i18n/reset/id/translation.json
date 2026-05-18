@@ -1,0 +1,16 @@
+{
+    "reset.title": "Reset Password",
+    "reset.description": "Atur password baru untuk akun kamu.",
+    "reset.verifying": "Memverifikasi tautan reset...",
+    "reset.passwordMin": "Password minimal 6 karakter.",
+    "reset.passwordMismatch": "Konfirmasi password tidak sama.",
+    "reset.updateFailedTitle": "Update Password Gagal",
+    "reset.updatedTitle": "Password Diperbarui",
+    "reset.updatedDescription": "Password kamu sudah diubah. Silakan login dengan password baru.",
+    "reset.updating": "Memperbarui...",
+    "reset.updateButton": "Perbarui Password",
+    "reset.invalidLink": "Tautan reset tidak valid atau kedaluwarsa. Minta tautan reset baru.",
+    "reset.requestNewLink": "Minta tautan reset baru",
+    "reset.newPasswordPlaceholder": "Password baru",
+    "reset.confirmPasswordPlaceholder": "Konfirmasi password baru"
+}

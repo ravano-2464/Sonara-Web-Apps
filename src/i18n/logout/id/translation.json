@@ -1,0 +1,10 @@
+{
+    "logout.closeAria": "Tutup konfirmasi logout",
+    "logout.confirmTitle": "Konfirmasi Logout",
+    "logout.confirmDescription": "Kamu yakin ingin logout dari akun ini?",
+    "logout.confirmButton": "Ya, Logout",
+    "logout.loggingOut": "Sedang logout...",
+    "logout.failedTitle": "Logout Gagal",
+    "logout.successTitle": "Logout Berhasil",
+    "logout.successDescription": "Kamu telah keluar dari akun."
+}

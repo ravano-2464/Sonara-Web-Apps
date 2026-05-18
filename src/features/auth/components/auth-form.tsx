@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { LanguageToggle } from "@/components/layout/language-toggle";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { useI18n } from "@/components/providers/i18n-provider";
 import { AuthToastContent } from "@/features/auth/components/auth-toast-content";
 import { getSupabaseBrowserClient } from "@/lib/supabase/browser";
@@ -252,12 +253,13 @@ export function AuthForm({ mode }: AuthFormProps) {
                         />
                     </>
                 )}
-                <Input
-                    type="password"
+                <PasswordInput
                     placeholder={t("auth.passwordPlaceholder")}
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
                     minLength={6}
+                    showLabel={t("auth.showPassword")}
+                    hideLabel={t("auth.hidePassword")}
                     required
                 />
                 {isLogin ? (

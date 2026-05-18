@@ -39,7 +39,7 @@ export function SidebarNav({ username, desktopOpen }: SidebarNavProps) {
     <>
       <aside
         className={cn(
-          "sonara-scrollbar hidden border-r border-zinc-800 bg-zinc-950/70 md:flex md:flex-col md:overflow-y-auto md:transition-all md:duration-300 md:ease-out",
+          "hidden border-r border-zinc-800 bg-zinc-950/70 md:flex md:flex-col md:overflow-y-auto md:transition-all md:duration-300 md:ease-out",
           desktopOpen
             ? "md:w-64 md:min-w-64 md:p-4 md:opacity-100"
             : "md:pointer-events-none md:invisible md:w-0 md:min-w-0 md:overflow-hidden md:border-r-0 md:p-0 md:opacity-0",
@@ -93,7 +93,7 @@ export function SidebarNav({ username, desktopOpen }: SidebarNavProps) {
       </aside>
 
       <div className="sticky top-0 z-30 border-b border-zinc-800 bg-zinc-950/85 p-2 backdrop-blur md:hidden">
-        <div className="sonara-scrollbar flex gap-1 overflow-x-auto pb-1">
+        <div className="flex gap-1 overflow-x-auto pb-1">
           {navItems.map((item) => {
             const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
 

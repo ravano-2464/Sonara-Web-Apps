@@ -1,0 +1,12 @@
+{
+    "forgot.title": "Lupa Password",
+    "forgot.description": "Masukkan email akun kamu. Kami akan mengirim tautan aman untuk reset password.",
+    "forgot.emailRequired": "Email wajib diisi.",
+    "forgot.sending": "Mengirim...",
+    "forgot.sendLink": "Kirim Tautan Reset",
+    "forgot.resetFailedTitle": "Reset Password Gagal",
+    "forgot.resetSentTitle": "Email Reset Terkirim",
+    "forgot.resetSentDescription": "Cek inbox email kamu lalu buka tautan reset untuk membuat password baru.",
+    "forgot.sentInline": "Tautan reset terkirim. Silakan cek inbox email kamu.",
+    "forgot.backToSignIn": "Kembali ke Masuk"
+}

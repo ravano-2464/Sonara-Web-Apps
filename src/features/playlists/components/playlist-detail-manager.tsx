@@ -253,7 +253,7 @@ export function PlaylistDetailManager({
                   : "pointer-events-none -translate-y-1 scale-95 opacity-0",
               )}
             >
-              <div className="sonara-scrollbar max-h-64 overflow-y-auto" role="listbox">
+              <div className="max-h-64 overflow-y-auto" role="listbox">
                 <button
                   type="button"
                   role="option"

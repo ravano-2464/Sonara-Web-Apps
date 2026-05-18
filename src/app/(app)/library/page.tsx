@@ -32,6 +32,19 @@ export default function LibraryPage() {
 
   const activeTrack = usePlayerStore((state) => state.activeTrack);
   const isPlaying = usePlayerStore((state) => state.isPlaying);
+  const uploaderName = useMemo(() => {
+    const metadataDisplayName =
+      typeof user?.user_metadata?.display_name === "string"
+        ? user.user_metadata.display_name.trim()
+        : "";
+    const metadataUsername =
+      typeof user?.user_metadata?.username === "string"
+        ? user.user_metadata.username.trim()
+        : "";
+    const emailUsername = user?.email?.split("@")[0]?.trim() ?? "";
+
+    return metadataDisplayName || metadataUsername || emailUsername || null;
+  }, [user]);
 
   const genres = useMemo(() => {
     const unique = new Set<string>();
@@ -78,7 +91,7 @@ export default function LibraryPage() {
         description={t("library.description")}
       />
 
-      <UploadTrackForm userId={user?.id} onUploaded={refetch} />
+      <UploadTrackForm userId={user?.id} uploaderName={uploaderName} onUploaded={refetch} />
 
       <section className="rounded-xl border border-zinc-800 bg-zinc-900/70 p-4">
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-[1fr_220px]">
@@ -119,7 +132,7 @@ export default function LibraryPage() {
                   : "pointer-events-none -translate-y-1 scale-95 opacity-0",
               )}
             >
-              <div className="max-h-64 overflow-y-auto sonara-scrollbar" role="listbox">
+              <div className="max-h-64 overflow-y-auto" role="listbox">
                 {genres.map((entry) => {
                   const isActive = genre === entry;
                   const label = entry === "all" ? t("library.allGenres") : entry;

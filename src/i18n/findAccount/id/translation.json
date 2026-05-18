@@ -1,0 +1,15 @@
+{
+    "findAccount.title": "Cari Akun",
+    "findAccount.description": "Masukkan email akun kamu untuk menemukan username.",
+    "findAccount.emailRequired": "Email wajib diisi.",
+    "findAccount.searching": "Mencari...",
+    "findAccount.searchButton": "Cari Username",
+    "findAccount.failedTitle": "Cari Akun Gagal",
+    "findAccount.notFoundTitle": "Akun Tidak Ditemukan",
+    "findAccount.notFound": "Tidak ada akun yang terdaftar dengan email tersebut.",
+    "findAccount.foundTitle": "Akun Ditemukan",
+    "findAccount.foundDescription": "Kami menemukan username akun kamu.",
+    "findAccount.result": "Username kamu adalah: {username}",
+    "findAccount.backToSignIn": "Kembali ke Masuk",
+    "findAccount.backToForgotPassword": "Lupa password?"
+}

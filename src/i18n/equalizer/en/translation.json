@@ -1,0 +1,9 @@
+{
+    "equalizer.title": "32-Band Equalizer",
+    "equalizer.presetLabel": "Equalizer preset",
+    "equalizer.bandGainLabel": "{frequency} band gain",
+    "equalizer.detectedOutput": "Detected output: {device}",
+    "equalizer.outputHeadphone": "Headphone",
+    "equalizer.outputSpeaker": "Speaker",
+    "equalizer.outputUnknown": "Unknown"
+}

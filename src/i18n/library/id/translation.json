@@ -1,0 +1,11 @@
+{
+    "library.title": "Perpustakaan",
+    "library.description": "Unggah audio, cari lagu, dan kelola katalog kamu.",
+    "library.searchPlaceholder": "Cari berdasarkan judul, artis, atau album",
+    "library.searchAria": "Cari lagu",
+    "library.filterByGenreAria": "Filter berdasarkan genre",
+    "library.allGenres": "Semua genre",
+    "library.moreGenres": "Genre lainnya",
+    "library.loadingTracks": "Memuat lagu...",
+    "library.emptyTracks": "Belum ada lagu di perpustakaan. Unggah lagu pertamamu di atas."
+}

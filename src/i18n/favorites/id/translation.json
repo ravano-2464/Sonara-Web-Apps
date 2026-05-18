@@ -1,0 +1,12 @@
+{
+    "favorites.title": "Favorit",
+    "favorites.description": "Kumpulan lagu yang kamu sukai dalam satu tempat.",
+    "favorites.loading": "Memuat favorit...",
+    "favorites.empty": "Belum ada favorit. Tekan ikon hati pada lagu mana pun.",
+    "favorites.toastSuccessTitle": "Favorit Diperbarui",
+    "favorites.toastFailedTitle": "Favorit Gagal",
+    "favorites.userMustSignIn": "Kamu harus login untuk mengelola favorit.",
+    "favorites.defaultTrackLabel": "lagu ini",
+    "favorites.addedDescription": "{title} berhasil ditambahkan ke favorit.",
+    "favorites.removedDescription": "{title} berhasil dihapus dari favorit."
+}

@@ -1,0 +1,12 @@
+{
+    "forgot.title": "Forgot Password",
+    "forgot.description": "Enter your account email. We will send a secure link to reset your password.",
+    "forgot.emailRequired": "Email is required.",
+    "forgot.sending": "Sending...",
+    "forgot.sendLink": "Send Reset Link",
+    "forgot.resetFailedTitle": "Reset Password Failed",
+    "forgot.resetSentTitle": "Reset Email Sent",
+    "forgot.resetSentDescription": "Check your inbox and open the reset link to set a new password.",
+    "forgot.sentInline": "Reset link sent. Please check your email inbox.",
+    "forgot.backToSignIn": "Back to Sign In"
+}

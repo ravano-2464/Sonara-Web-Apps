@@ -36,6 +36,8 @@ export interface Database {
                 Row: {
                     id: string;
                     user_id: string;
+                    uploader_name: string | null;
+                    is_public: boolean;
                     title: string;
                     artist: string;
                     album: string | null;
@@ -49,6 +51,8 @@ export interface Database {
                 Insert: {
                     id?: string;
                     user_id: string;
+                    uploader_name?: string | null;
+                    is_public?: boolean;
                     title: string;
                     artist: string;
                     album?: string | null;
@@ -62,6 +66,8 @@ export interface Database {
                 Update: {
                     id?: string;
                     user_id?: string;
+                    uploader_name?: string | null;
+                    is_public?: boolean;
                     title?: string;
                     artist?: string;
                     album?: string | null;

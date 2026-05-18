@@ -1,0 +1,10 @@
+{
+    "playlist.toastFailedTitle": "Playlist Failed",
+    "playlist.toastSuccessTitle": "Playlist Successful",
+    "playlist.userNotFound": "User not found.",
+    "playlist.createdDescription": "{name} was created successfully.",
+    "playlist.deletedDescription": "{name} and all tracks in this playlist were removed.",
+    "playlist.trackAddedDescription": "{title} was added to the playlist.",
+    "playlist.trackRemovedDescription": "{title} was removed from the playlist.",
+    "playlist.defaultTrackLabel": "this track"
+}

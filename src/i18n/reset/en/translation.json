@@ -1,0 +1,16 @@
+{
+    "reset.title": "Reset Password",
+    "reset.description": "Set a new password for your account.",
+    "reset.verifying": "Verifying reset link...",
+    "reset.passwordMin": "Password must be at least 6 characters.",
+    "reset.passwordMismatch": "Password confirmation does not match.",
+    "reset.updateFailedTitle": "Password Update Failed",
+    "reset.updatedTitle": "Password Updated",
+    "reset.updatedDescription": "Your password has been changed. Please sign in with your new password.",
+    "reset.updating": "Updating...",
+    "reset.updateButton": "Update Password",
+    "reset.invalidLink": "Reset link is invalid or expired. Please request a new reset link.",
+    "reset.requestNewLink": "Request a new reset link",
+    "reset.newPasswordPlaceholder": "New password",
+    "reset.confirmPasswordPlaceholder": "Confirm new password"
+}

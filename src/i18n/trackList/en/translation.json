@@ -1,0 +1,9 @@
+{
+    "trackList.emptyDefault": "No tracks found.",
+    "trackList.pauseTrack": "Pause track",
+    "trackList.playTrack": "Play track",
+    "trackList.single": "Single",
+    "trackList.uploadedBy": "Uploaded by {name}",
+    "trackList.removeFavorite": "Remove from favorites",
+    "trackList.addFavorite": "Add to favorites"
+}

@@ -46,6 +46,7 @@ export function TrackList({
         {tracks.map((track, index) => {
           const isActive = activeTrackId === track.id;
           const isFav = favoriteTrackIds?.has(track.id) ?? false;
+          const uploaderName = track.uploader_name?.trim();
 
           return (
             <li
@@ -71,6 +72,11 @@ export function TrackList({
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium text-zinc-100">{track.title}</p>
                 <p className="truncate text-xs text-zinc-400">{track.artist}</p>
+                {uploaderName ? (
+                  <p className="truncate text-[11px] text-zinc-500">
+                    {t("trackList.uploadedBy", { name: uploaderName })}
+                  </p>
+                ) : null}
               </div>
 
               <p className="hidden truncate text-xs text-zinc-400 sm:block">

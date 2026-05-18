@@ -25,6 +25,8 @@ create table if not exists public.users (
 create table if not exists public.tracks (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users(id) on delete cascade,
+  uploader_name text,
+  is_public boolean not null default false,
   title text not null,
   artist text not null,
   album text,
@@ -121,6 +123,8 @@ alter table if exists public.users alter column updated_at set default now();
 
 alter table if exists public.tracks add column if not exists id uuid default gen_random_uuid();
 alter table if exists public.tracks add column if not exists user_id uuid references auth.users(id) on delete cascade;
+alter table if exists public.tracks add column if not exists uploader_name text;
+alter table if exists public.tracks add column if not exists is_public boolean default false;
 alter table if exists public.tracks add column if not exists title text;
 alter table if exists public.tracks add column if not exists artist text;
 alter table if exists public.tracks add column if not exists album text;
@@ -131,7 +135,24 @@ alter table if exists public.tracks add column if not exists cover_url text;
 alter table if exists public.tracks add column if not exists audio_url text;
 alter table if exists public.tracks add column if not exists created_at timestamptz default now();
 alter table if exists public.tracks alter column id set default gen_random_uuid();
+alter table if exists public.tracks alter column is_public set default false;
 alter table if exists public.tracks alter column created_at set default now();
+
+update public.tracks
+set is_public = false
+where is_public is null;
+
+alter table if exists public.tracks alter column is_public set not null;
+
+update public.tracks t
+set uploader_name = coalesce(
+  nullif(trim(u.display_name), ''),
+  nullif(split_part(coalesce(u.email, ''), '@', 1), ''),
+  t.artist
+)
+from public.users u
+where t.user_id = u.id
+  and (t.uploader_name is null or trim(t.uploader_name) = '');
 
 alter table if exists public.playlists add column if not exists id uuid default gen_random_uuid();
 alter table if exists public.playlists add column if not exists user_id uuid references auth.users(id) on delete cascade;
@@ -236,6 +257,7 @@ alter table if exists public.equalizer_presets alter column updated_at set defau
 
 create index if not exists idx_tracks_created_at on public.tracks (created_at desc);
 create index if not exists idx_tracks_user_id on public.tracks (user_id);
+create index if not exists idx_tracks_public_created_at on public.tracks (is_public, created_at desc);
 create index if not exists idx_playlists_user_id on public.playlists (user_id);
 create index if not exists idx_playlist_tracks_playlist_position on public.playlist_tracks (playlist_id, position);
 create index if not exists idx_favorites_user_id on public.favorites (user_id);
@@ -359,11 +381,12 @@ using (auth.uid() = id)
 with check (auth.uid() = id);
 
 -- tracks
+drop policy if exists "Users can read public tracks and own tracks" on public.tracks;
 drop policy if exists "Authenticated users can read tracks" on public.tracks;
-create policy "Authenticated users can read tracks"
+create policy "Users can read public tracks and own tracks"
 on public.tracks
 for select
-using (auth.role() = 'authenticated');
+using (is_public = true or auth.uid() = user_id);
 
 drop policy if exists "Users can insert own tracks" on public.tracks;
 create policy "Users can insert own tracks"

@@ -31,7 +31,7 @@ export function useRecentlyPlayed(userId: string | undefined) {
     const supabase = getSupabaseBrowserClient();
     const { data, error: queryError } = await supabase
       .from("recently_played")
-      .select("user_id, track_id, played_at, tracks(*)")
+      .select("user_id, track_id, played_at, tracks!inner(*)")
       .eq("user_id", userId)
       .order("played_at", { ascending: false })
       .limit(50);

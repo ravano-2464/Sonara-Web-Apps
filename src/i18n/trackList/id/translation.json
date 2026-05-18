@@ -1,0 +1,9 @@
+{
+    "trackList.emptyDefault": "Tidak ada lagu ditemukan.",
+    "trackList.pauseTrack": "Jeda lagu",
+    "trackList.playTrack": "Putar lagu",
+    "trackList.single": "Single",
+    "trackList.uploadedBy": "Diunggah oleh {name}",
+    "trackList.removeFavorite": "Hapus dari favorit",
+    "trackList.addFavorite": "Tambah ke favorit"
+}

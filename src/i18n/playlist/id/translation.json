@@ -1,0 +1,10 @@
+{
+    "playlist.toastFailedTitle": "Playlist Gagal",
+    "playlist.toastSuccessTitle": "Playlist Berhasil",
+    "playlist.userNotFound": "User tidak ditemukan.",
+    "playlist.createdDescription": "{name} berhasil dibuat.",
+    "playlist.deletedDescription": "{name} dan semua lagu di playlist ini berhasil dihapus.",
+    "playlist.trackAddedDescription": "{title} berhasil ditambahkan ke playlist.",
+    "playlist.trackRemovedDescription": "{title} berhasil dihapus dari playlist.",
+    "playlist.defaultTrackLabel": "lagu ini"
+}

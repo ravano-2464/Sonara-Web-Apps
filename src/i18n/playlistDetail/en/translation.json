@@ -1,0 +1,17 @@
+{
+    "playlistDetail.title": "Playlist Detail",
+    "playlistDetail.description": "Manage metadata, add tracks, and edit queue composition.",
+    "playlistDetail.loading": "Loading playlist...",
+    "playlistDetail.notFound": "Playlist not found.",
+    "playlistDetail.editSubtitle": "Edit details, add tracks, or remove tracks from this playlist.",
+    "playlistDetail.descriptionPlaceholder": "Description",
+    "playlistDetail.updated": "Playlist updated.",
+    "playlistDetail.addTrackTitle": "Add Track",
+    "playlistDetail.selectTrack": "Select a track",
+    "playlistDetail.trackAdded": "Track added.",
+    "playlistDetail.trackRemoved": "Track removed.",
+    "playlistDetail.emptyTracks": "This playlist is empty.",
+    "playlistDetail.removeTrackAria": "Remove track from playlist",
+    "playlistDetail.errorPrefix": "Error: {error}",
+    "playlistDetail.deleted": "Delete Playlist"
+}

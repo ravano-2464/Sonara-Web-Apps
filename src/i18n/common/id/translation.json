@@ -1,0 +1,17 @@
+{
+    "common.signedIn": "Sudah masuk",
+    "common.logout": "Logout",
+    "common.cancel": "Batal",
+    "common.close": "Tutup",
+    "common.description": "Deskripsi",
+    "common.loading": "Memuat...",
+    "common.processing": "Memproses...",
+    "common.create": "Buat",
+    "common.saveChanges": "Simpan Perubahan",
+    "common.delete": "Hapus",
+    "common.add": "Tambah",
+    "common.reset": "Reset",
+    "common.custom": "Kustom",
+    "common.upload": "Unggah",
+    "common.requestNewResetLink": "Minta tautan reset baru"
+}

@@ -1,0 +1,10 @@
+{
+    "logout.closeAria": "Close logout confirmation",
+    "logout.confirmTitle": "Confirm Logout",
+    "logout.confirmDescription": "Are you sure you want to log out from this account?",
+    "logout.confirmButton": "Yes, Logout",
+    "logout.loggingOut": "Logging out...",
+    "logout.failedTitle": "Logout Failed",
+    "logout.successTitle": "Logout Successful",
+    "logout.successDescription": "You have signed out from your account."
+}
